@@ -26,4 +26,9 @@ public class Place {
 		this.qntCoin = coin;
 	}
 
+	@Override
+	public String toString() {
+		return label + "(" + qntCoin + ")";
+	}
+
 }

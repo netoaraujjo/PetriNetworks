@@ -36,4 +36,9 @@ public class Edge {
 		this.weight = weight;
 	}
 
+	@Override
+	public String toString() {
+		return place.getLabel() + "-" + weight + "-" + transition.getLabel();
+	}
+
 }

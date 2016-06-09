@@ -26,4 +26,9 @@ public class Transition {
 		this.active = active;
 	}
 
+	@Override
+	public String toString() {
+		return label + "(" + active + ")";
+	}
+
 }
