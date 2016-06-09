@@ -1,21 +1,12 @@
 package app;
 
-public class Transition {
+public class Transition extends State{
 
-	private String label;
 	private boolean active;
 
 	public Transition(String label, boolean active) {
-		this.label = label;
-		this.active = active;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
+		super(label);
+		setActive(active);
 	}
 
 	public boolean isActive() {
@@ -28,7 +19,7 @@ public class Transition {
 
 	@Override
 	public String toString() {
-		return label + "(" + active + ")";
+		return getLabel() + "(" + isActive() + ")";
 	}
 
 }

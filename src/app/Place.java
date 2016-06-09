@@ -1,34 +1,25 @@
 package app;
 
-public class Place {
+public class Place extends State {
 
-	private String label;
 	private int qntCoin;
 
 	public Place(String label, int qntCoin) {
-		this.label = label;
+		super(label);
 		this.qntCoin = qntCoin;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public int getCoin() {
+	public int getQntCoin() {
 		return qntCoin;
 	}
 
-	public void setCoin(int coin) {
-		this.qntCoin = coin;
+	public void setQntCoin(int qntCoin) {
+		this.qntCoin = qntCoin;
 	}
 
 	@Override
 	public String toString() {
-		return label + "(" + qntCoin + ")";
+		return getLabel() + "(" + getQntCoin() + ")";
 	}
 
 }

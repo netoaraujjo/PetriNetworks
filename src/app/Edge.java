@@ -2,30 +2,30 @@ package app;
 
 public class Edge {
 
-	private Place place;
-	private Transition transition;
+	private State origin;
+	private State destiny;
 	private int weight;
 
-	public Edge(Place place, Transition transition, int weight) {
-		this.place = place;
-		this.transition = transition;
+	public Edge(State origin, State destiny, int weight) {
+		this.origin = origin;
+		this.destiny = destiny;
 		this.weight = weight;
 	}
 
-	public Place getPlace() {
-		return place;
+	public State getOrigin() {
+		return origin;
 	}
 
-	public void setPlace(Place place) {
-		this.place = place;
+	public void setOrigin(State origin) {
+		this.origin = origin;
 	}
 
-	public Transition getTransition() {
-		return transition;
+	public State getDestiny() {
+		return destiny;
 	}
 
-	public void setTransition(Transition transition) {
-		this.transition = transition;
+	public void setDestiny(State destiny) {
+		this.destiny = destiny;
 	}
 
 	public int getWeight() {
@@ -38,7 +38,7 @@ public class Edge {
 
 	@Override
 	public String toString() {
-		return place.getLabel() + "-" + weight + "-" + transition.getLabel();
+		return origin.getLabel() + "-" + getWeight() + "-" + destiny.getLabel();
 	}
 
 }
