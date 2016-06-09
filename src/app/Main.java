@@ -5,36 +5,52 @@ import java.util.ArrayList;
 public class Main {
 
 	public static void main(String[] args) {
+//		Lugares da rede		
+		Place p1,p2,p3,p4;
+		p1 = new Place("p1", 1);
+		p2 = new Place("p2", 0);
+		p3 = new Place("p3", 0);
+		p4 = new Place("p4", 0);
+		
+//		Transições da rede
+		Transition t1,t2,t3;
+		t1 = new Transition("t1", false);
+		t2 = new Transition("t2", false);
+		t3 = new Transition("t3", false);
 		
 		ArrayList<Place> places = new ArrayList<Place>();
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		
-		places.add(new Place("p1", 1));
-		places.add(new Place("p2", 0));
-		places.add(new Place("p3", 0));
-		places.add(new Place("p4", 0));
+//		Adicionando lugares ao ArrayList
+		places.add(p1);
+		places.add(p2);
+		places.add(p3);
+		places.add(p4);
 
-		transitions.add(new Transition("t1", false));
-		transitions.add(new Transition("t2", false));
-		transitions.add(new Transition("t3", false));
+//		Adicionando transições ao ArrayList
+		transitions.add(t1);
+		transitions.add(t2);
+		transitions.add(t3);
 
-		edges.add(new Edge(new Place("p1", 1), new Transition("t1", false), 1));
-		edges.add(new Edge(new Place("p2", 1), new Transition("t1", false), 1));
-		edges.add(new Edge(new Place("p3", 1), new Transition("t1", false), 1));
+//		Adicionando arestas ao ArrayList
+		edges.add(new Edge(p1, t1, 1));
+		edges.add(new Edge(t1, p2, 1));
+		edges.add(new Edge(t1, p3, 1));
+
+		edges.add(new Edge(t2, p1, 1));
+		edges.add(new Edge(p2, t2, 1));
 		
-		edges.add(new Edge(new Place("p1", 1), new Transition("t2", false), 1));
-		edges.add(new Edge(new Place("p2", 1), new Transition("t2", false), 1));
+		edges.add(new Edge(p2, t3, 1));
+		edges.add(new Edge(p3, t3, 1));
+		edges.add(new Edge(t3, p3, 1));
+		edges.add(new Edge(t3, p4, 1));
 		
-		edges.add(new Edge(new Place("p2", 1), new Transition("t3", false), 1));
-		edges.add(new Edge(new Place("p3", 1), new Transition("t3", false), 1));
-//		edges.add(new Edge(new Place("p3", 1), new Transition("t3", false), 1));
-		edges.add(new Edge(new Place("p4", 1), new Transition("t3", false), 1));
-		
+//		Criando rede de Petri inicial
 		PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
 		
 		System.out.println(petriNetwork);
-
+		
 	}
 
 }

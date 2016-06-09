@@ -16,7 +16,33 @@ public class PetriNetwork {
 		this.edges = edges;
 
 		for (Place place : this.places) {
-			this.configuration.add(place.getCoin());
+			this.configuration.add(place.getQntCoin());
+		}
+
+		for (Transition transition : this.transitions) {
+
+			boolean active = false;
+			for (Edge edge : this.edges) {
+
+				// Transição é o destino da aresta
+				if (transition.getLabel().equals(edge.getDestiny().getLabel())) {
+					Place p = (Place) edge.getOrigin();
+					// Se pelo menos um lugar não tem fichas suficientes, a
+					// transição se torna inativa
+					if (p.getQntCoin() < edge.getWeight()) {
+						active = false;
+						break;
+					} else if (p.getQntCoin() >= edge.getWeight()) {
+//						System.out.println(transition.getLabel() + " -> " + p + " | " + edge);
+						active = true;
+					}
+				}
+
+			}
+
+			// Ativa ou desativa a transição, dependendo do retorno do for
+			// anterior
+			transition.setActive(active);
 		}
 
 	}
@@ -56,12 +82,12 @@ public class PetriNetwork {
 	@Override
 	public String toString() {
 		String str = "";
-		
+
 		str += "Lugares: " + places + "\n";
 		str += "Transições: " + transitions + "\n";
 		str += "Arestas: " + edges + "\n";
 		str += "Configuração inicial: " + configuration + "\n";
-		
+
 		return str;
 	}
 
