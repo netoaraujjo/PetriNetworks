@@ -51,6 +51,36 @@ public class Main {
 		
 		System.out.println(petriNetwork);
 		
+		for (Transition transition : transitions) {
+			if (transition.isActive()){
+				PetriNetwork pn = petriNetwork;
+				for (Edge edge : edges) {
+
+//					Se a transição for origem
+					if(edge.getOrigin().getLabel().equals(transition.getLabel())){
+						
+						Place p = (Place) edge.getDestiny();
+//						Incrementa fichas de acordo com o peso da aresta
+						p.setQntCoin(p.getQntCoin() + edge.getWeight());
+						
+//					Se a transição for destino
+					} else if(edge.getDestiny().getLabel().equals(transition.getLabel())){
+						
+						Place p = (Place) edge.getOrigin();
+//						Decrementa fichas de acordo com o peso da aresta
+						p.setQntCoin(p.getQntCoin() - edge.getWeight());
+						
+					}
+					
+				}
+				
+				pn.configurationRefresh();
+				pn.transitionsRefresh();
+				System.out.println(pn);
+			}
+				
+		}
+		
 	}
 
 }

@@ -8,6 +8,7 @@ public class PetriNetwork {
 	private ArrayList<Transition> transitions;
 	private ArrayList<Edge> edges;
 	private ArrayList<Integer> configuration = new ArrayList<Integer>();
+	private ArrayList<Integer> initialConfiguration = new ArrayList<Integer>();
 
 	public PetriNetwork(ArrayList<Place> places, ArrayList<Transition> transitions, ArrayList<Edge> edges) {
 
@@ -15,10 +16,32 @@ public class PetriNetwork {
 		this.transitions = transitions;
 		this.edges = edges;
 
-		for (Place place : this.places) {
-			this.configuration.add(place.getQntCoin());
-		}
+		configurationRefresh();
+		this.initialConfiguration = this.configuration;
+		
+		transitionsRefresh();
 
+	}
+
+
+	public ArrayList<Place> getPlaces() {
+		return places;
+	}
+
+	public void setPlaces(ArrayList<Place> places) {
+		this.places = places;
+	}
+
+	public ArrayList<Transition> getTransitions() {
+		return transitions;
+	}
+
+	public void setTransitions(ArrayList<Transition> transitions) {
+		this.transitions = transitions;
+	}
+	
+	public void transitionsRefresh() {
+		
 		for (Transition transition : this.transitions) {
 
 			boolean active = false;
@@ -44,23 +67,7 @@ public class PetriNetwork {
 			// anterior
 			transition.setActive(active);
 		}
-
-	}
-
-	public ArrayList<Place> getPlaces() {
-		return places;
-	}
-
-	public void setPlaces(ArrayList<Place> places) {
-		this.places = places;
-	}
-
-	public ArrayList<Transition> getTransitions() {
-		return transitions;
-	}
-
-	public void setTransitions(ArrayList<Transition> transitions) {
-		this.transitions = transitions;
+		
 	}
 
 	public ArrayList<Edge> getEdges() {
@@ -78,15 +85,34 @@ public class PetriNetwork {
 	public void setConfiguration(ArrayList<Integer> configuration) {
 		this.configuration = configuration;
 	}
+	
+	public void configurationRefresh() {
+//		Esvazia array
+		this.configuration = new ArrayList<Integer>();
+		
+//		Atualiza array com os novos valores das fichas
+		for (Place place : this.places) {
+			this.configuration.add(place.getQntCoin());
+		}
+	}
+
+	public ArrayList<Integer> getInitialConfiguration() {
+		return initialConfiguration;
+	}
+
+	public void setInitialConfiguration(ArrayList<Integer> initialConfiguration) {
+		this.initialConfiguration = initialConfiguration;
+	}
 
 	@Override
 	public String toString() {
 		String str = "";
 
-		str += "Lugares: " + places + "\n";
-		str += "Transições: " + transitions + "\n";
-		str += "Arestas: " + edges + "\n";
-		str += "Configuração inicial: " + configuration + "\n";
+		str += "Lugares: " + getPlaces() + "\n";
+		str += "Transições: " + getTransitions() + "\n";
+		str += "Arestas: " + getEdges() + "\n";
+		str += "Configuração inicial: " + getInitialConfiguration() + "\n";
+		str += "Configuração atual: " + getConfiguration() + "\n";
 
 		return str;
 	}
