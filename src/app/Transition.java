@@ -1,12 +1,17 @@
 package app;
 
-public class Transition extends State{
+public class Transition extends State {
 
 	private boolean active;
 
 	public Transition(String label, boolean active) {
 		super(label);
 		setActive(active);
+	}
+
+	public Transition(Transition transition) {
+		super(transition.getLabel());
+		setActive(transition.isActive());
 	}
 
 	public boolean isActive() {
@@ -20,6 +25,11 @@ public class Transition extends State{
 	@Override
 	public String toString() {
 		return getLabel() + "(" + isActive() + ")";
+	}
+
+	public Transition clone() {
+		// deep copy
+		return new Transition(this);
 	}
 
 }
