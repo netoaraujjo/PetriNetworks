@@ -9,12 +9,15 @@ public class PetriNetwork {
 	private ArrayList<Edge> edges;
 	private ArrayList<Integer> configuration = new ArrayList<Integer>();
 	private ArrayList<Integer> initialConfiguration = new ArrayList<Integer>();
+	private int[][] incidenceMatrix;
 
 	public PetriNetwork(ArrayList<Place> places, ArrayList<Transition> transitions, ArrayList<Edge> edges) {
 
 		this.places = places;
 		this.transitions = transitions;
 		this.edges = edges;
+
+		this.setIncidenceMatrix(new int[transitions.size()][places.size()]);
 
 		configurationRefresh();
 		this.initialConfiguration = this.configuration;
@@ -39,6 +42,9 @@ public class PetriNetwork {
 		for (Edge edge : petriNetwork.edges) {
 			this.edges.add(edge.clone());
 		}
+
+//		FALTA ARRUMAR
+//		this.setIncidenceMatrix(new int[transitions.size()][places.size()]);
 
 		this.configuration = new ArrayList<Integer>(petriNetwork.configuration);
 		this.initialConfiguration = new ArrayList<Integer>(petriNetwork.initialConfiguration);
@@ -77,8 +83,6 @@ public class PetriNetwork {
 						active = false;
 						break;
 					} else if (p.getQntCoin() >= edge.getWeight()) {
-						// System.out.println(transition.getLabel() + " -> " + p
-						// + " | " + edge);
 						active = true;
 					}
 				}
@@ -177,6 +181,27 @@ public class PetriNetwork {
 		} else {
 			return null;
 		}
+	}
+
+	public int[][] getIncidenceMatrix() {
+		return incidenceMatrix;
+	}
+
+	public void setIncidenceMatrix(int[][] incidenceMatrix) {
+		this.incidenceMatrix = incidenceMatrix;
+	}
+	
+	public String incidenceMatrixToString() {
+		String str = "";
+		
+		for (int i = 0; i < incidenceMatrix.length; i++) {
+			for (int j = 0; j < incidenceMatrix[i].length; j++) {
+				str += incidenceMatrix[i][j] + " ";
+			}
+			str += "\n";
+		}
+		
+		return str;
 	}
 
 }

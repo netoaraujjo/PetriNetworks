@@ -61,6 +61,23 @@ public class Main {
 				System.out.println("Transição está inativa!\n");
 			}
 		}
+		
+		int[][] incidenceMatrix = petriNetwork.getIncidenceMatrix();
+		
+		for (int i = 0; i < incidenceMatrix.length; i++) {
+//			Transição relativa ao número da linha
+			Transition transition = petriNetwork.getTransitions().get(i);
+			
+			for (int j = 0; j < incidenceMatrix[i].length; j++) {
+//				Lugar relativo ao número da coluna
+				Place place = petriNetwork.getPlaces().get(j);
+				
+//				Pesquisar na lista de Arestas e calcular valor para colocar na matriz
+				
+			}
+		}
+		
+		System.out.println("Teste\n" + petriNetwork.incidenceMatrixToString());
 
 	}
 
