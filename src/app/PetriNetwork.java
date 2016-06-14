@@ -18,11 +18,32 @@ public class PetriNetwork {
 
 		configurationRefresh();
 		this.initialConfiguration = this.configuration;
-		
+
 		transitionsRefresh();
 
 	}
 
+	public PetriNetwork(PetriNetwork petriNetwork) {
+
+		this.places = new ArrayList<Place>();
+		for (Place place : petriNetwork.places) {
+			this.places.add(place.clone());
+		}
+
+		this.transitions = new ArrayList<Transition>();
+		for (Transition transition : petriNetwork.transitions) {
+			this.transitions.add(transition.clone());
+		}
+
+		this.edges = new ArrayList<Edge>();
+		for (Edge edge : petriNetwork.edges) {
+			this.edges.add(edge.clone());
+		}
+
+		this.configuration = new ArrayList<Integer>(petriNetwork.configuration);
+		this.initialConfiguration = new ArrayList<Integer>(petriNetwork.initialConfiguration);
+
+	}
 
 	public ArrayList<Place> getPlaces() {
 		return places;
@@ -39,9 +60,9 @@ public class PetriNetwork {
 	public void setTransitions(ArrayList<Transition> transitions) {
 		this.transitions = transitions;
 	}
-	
+
 	public void transitionsRefresh() {
-		
+
 		for (Transition transition : this.transitions) {
 
 			boolean active = false;
@@ -56,7 +77,8 @@ public class PetriNetwork {
 						active = false;
 						break;
 					} else if (p.getQntCoin() >= edge.getWeight()) {
-//						System.out.println(transition.getLabel() + " -> " + p + " | " + edge);
+						// System.out.println(transition.getLabel() + " -> " + p
+						// + " | " + edge);
 						active = true;
 					}
 				}
@@ -67,7 +89,7 @@ public class PetriNetwork {
 			// anterior
 			transition.setActive(active);
 		}
-		
+
 	}
 
 	public ArrayList<Edge> getEdges() {
@@ -85,12 +107,12 @@ public class PetriNetwork {
 	public void setConfiguration(ArrayList<Integer> configuration) {
 		this.configuration = configuration;
 	}
-	
+
 	public void configurationRefresh() {
-//		Esvazia array
+		// Esvazia array
 		this.configuration = new ArrayList<Integer>();
-		
-//		Atualiza array com os novos valores das fichas
+
+		// Atualiza array com os novos valores das fichas
 		for (Place place : this.places) {
 			this.configuration.add(place.getQntCoin());
 		}
@@ -115,6 +137,46 @@ public class PetriNetwork {
 		str += "Configuração atual: " + getConfiguration() + "\n";
 
 		return str;
+	}
+
+	public PetriNetwork clone() {
+		return new PetriNetwork(this);
+	}
+
+	public PetriNetwork transitionMovement(Transition transition) {
+		PetriNetwork petriNetwork = clone();
+
+		if (transition.isActive()) {
+
+			for (Edge edge : petriNetwork.getEdges()) {
+
+				// Se a transição for origem
+				if (edge.getOrigin().getLabel().equals(transition.getLabel())) {
+
+					Place p = (Place) edge.getDestiny();
+					// p = p.clone();
+					// Incrementa fichas de acordo com o peso da aresta
+					p.setQntCoin(p.getQntCoin() + edge.getWeight());
+
+					// Se a transição for destino
+				} else if (edge.getDestiny().getLabel().equals(transition.getLabel())) {
+
+					Place p = (Place) edge.getOrigin();
+					// p = p.clone();
+					// Decrementa fichas de acordo com o peso da aresta
+					p.setQntCoin(p.getQntCoin() - edge.getWeight());
+
+				}
+			}
+
+			petriNetwork.configurationRefresh();
+			petriNetwork.transitionsRefresh();
+
+			return petriNetwork;
+
+		} else {
+			return null;
+		}
 	}
 
 }
