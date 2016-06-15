@@ -1,6 +1,8 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -20,7 +22,7 @@ public class Main {
 
 		ArrayList<Place> places = new ArrayList<Place>();
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
-		ArrayList<Edge> edges = new ArrayList<Edge>();
+		Map<String, ArrayList<Edge>> edges = new HashMap<>();
 
 		// Adicionando lugares ao ArrayList
 		places.add(p1);
@@ -34,17 +36,23 @@ public class Main {
 		transitions.add(t3);
 
 		// Adicionando arestas ao ArrayList
-		edges.add(new Edge(p1, t1, 1));
-		edges.add(new Edge(t1, p2, 1));
-		edges.add(new Edge(t1, p3, 1));
+		ArrayList<Edge> edgesList = new ArrayList<Edge>();
+		edgesList.add(new Edge(p1, t1, 1));
+		edgesList.add(new Edge(t1, p2, 1));
+		edgesList.add(new Edge(t1, p3, 1));
+		edges.put(t1.getLabel(), edgesList);
 
-		edges.add(new Edge(t2, p1, 1));
-		edges.add(new Edge(p2, t2, 1));
+		edgesList = new ArrayList<Edge>();
+		edgesList.add(new Edge(p2, t2, 1));
+		edgesList.add(new Edge(t2, p1, 1));
+		edges.put(t2.getLabel(), edgesList);
 
-		edges.add(new Edge(p2, t3, 1));
-		edges.add(new Edge(p3, t3, 1));
-		edges.add(new Edge(t3, p3, 1));
-		edges.add(new Edge(t3, p4, 1));
+		edgesList = new ArrayList<Edge>();
+		edgesList.add(new Edge(p2, t3, 1));
+		edgesList.add(new Edge(p3, t3, 1));
+		edgesList.add(new Edge(t3, p3, 1));
+		edgesList.add(new Edge(t3, p4, 1));
+		edges.put(t3.getLabel(), edgesList);
 
 		// Criando rede de Petri inicial
 		PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
@@ -62,7 +70,8 @@ public class Main {
 			}
 		}
 		
-		int[][] incidenceMatrix = petriNetwork.getIncidenceMatrix();
+		
+		int[][] incidenceMatrix = new int[transitions.size()][places.size()];
 		
 		for (int i = 0; i < incidenceMatrix.length; i++) {
 //			Transição relativa ao número da linha
@@ -77,8 +86,21 @@ public class Main {
 			}
 		}
 		
-		System.out.println("Teste\n" + petriNetwork.incidenceMatrixToString());
+		System.out.println("Teste\n" + incidenceMatrixToString(incidenceMatrix));
 
+	}
+	
+	public static String incidenceMatrixToString(int[][] incidenceMatrix) {
+		String str = "";
+
+		for (int i = 0; i < incidenceMatrix.length; i++) {
+			for (int j = 0; j < incidenceMatrix[i].length; j++) {
+				str += incidenceMatrix[i][j] + " ";
+			}
+			str += "\n";
+		}
+
+		return str;
 	}
 
 }
