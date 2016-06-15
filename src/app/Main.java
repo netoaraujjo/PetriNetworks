@@ -69,30 +69,57 @@ public class Main {
 				System.out.println("Transição está inativa!\n");
 			}
 		}
-		
-		
+
 		int[][] incidenceMatrix = new int[transitions.size()][places.size()];
-		
+
 		for (int i = 0; i < incidenceMatrix.length; i++) {
-//			Transição relativa ao número da linha
+			// Transição relativa ao número da linha
 			Transition transition = petriNetwork.getTransitions().get(i);
-			
+
 			for (int j = 0; j < incidenceMatrix[i].length; j++) {
-//				Lugar relativo ao número da coluna
+				// Lugar relativo ao número da coluna
 				Place place = petriNetwork.getPlaces().get(j);
-				
-//				Pesquisar na lista de Arestas e calcular valor para colocar na matriz
-				
+
+				// Valor a ser inserido na matriz de incidência
+				int value = 0;
+
+				// Arestas da transição atual
+				for (Edge edge : petriNetwork.getEdges().get(transition.getLabel())) {
+
+					// Se a transição atual for origem e o destino for o lugar
+					// atual
+					if (edge.getOrigin().getLabel().equals(transition.getLabel())
+							&& edge.getDestiny().getLabel().equals(place.getLabel())) {
+
+						// Incrementa valor de acordo com o peso da aresta
+						value += edge.getWeight();
+
+						// Se a transição atual for destino e a origem for o
+						// lugar atual
+					} else if (edge.getDestiny().getLabel().equals(transition.getLabel())
+							&& edge.getOrigin().getLabel().equals(place.getLabel())) {
+
+						// Decrementa valor de acordo com o peso da aresta
+						value -= edge.getWeight();
+
+					}
+
+				}
+
+				incidenceMatrix[i][j] = value;
+
 			}
+
 		}
-		
-		System.out.println("Teste\n" + incidenceMatrixToString(incidenceMatrix));
+
+		System.out
+				.println("\n[Matriz de Incidência]:\n" + incidenceMatrixToString(incidenceMatrix));
 
 	}
-	
+
 	public static String incidenceMatrixToString(int[][] incidenceMatrix) {
 		String str = "";
-
+		
 		for (int i = 0; i < incidenceMatrix.length; i++) {
 			for (int j = 0; j < incidenceMatrix[i].length; j++) {
 				str += incidenceMatrix[i][j] + " ";
