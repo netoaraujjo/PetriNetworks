@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.MenuBar;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,6 +29,7 @@ public class MainWindow extends JFrame {
 	private JMenu helpMenu;
 	
 	// Opcoes do menu file
+	private JMenuItem newMenuItem;
 	private JMenuItem openMenuItem;
 	private JMenuItem saveMenuItem;
 	private JMenuItem exitMenuItem;
@@ -50,6 +53,7 @@ public class MainWindow extends JFrame {
 	
 	// Barra de ferramentas file
 	private JToolBar fileToolbar;
+	private JButton newFileButton;
 	private JButton openFileButton;
 	private JButton saveFileButton;
 	
@@ -87,11 +91,13 @@ public class MainWindow extends JFrame {
 		menuBar = new JMenuBar();
 		
 		fileMenu = new JMenu("Arquivo");
+		newMenuItem = new JMenuItem("Novo");
 		openMenuItem = new JMenuItem("Abrir arquivo");
 		saveMenuItem = new JMenuItem("Salvar arquivo");
 		exportMenuItem = new JMenuItem("Exportar");
 		exitMenuItem = new JMenuItem("Sair");
 		
+		fileMenu.add(newMenuItem);
 		fileMenu.add(openMenuItem);
 		fileMenu.add(saveMenuItem);
 		fileMenu.add(exportMenuItem);
@@ -118,26 +124,51 @@ public class MainWindow extends JFrame {
 	private void createToolbar() {
 		toolbarPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
+		String iconsDir = "icons/";
+		
 		fileToolbar = new JToolBar();
 		fileToolbar.setName("File");
 		
-		openFileButton = new JButton("Open file");
-		saveFileButton = new JButton("Save file");
+		// Componentes da barra de ferramentas de arquivo
+		Icon newFileIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "new.png"));
+		newFileButton = new JButton(newFileIcon);
+		newFileButton.setToolTipText("Novo arquivo");
 		
+		Icon openFileIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "open.png"));
+		openFileButton = new JButton(openFileIcon);
+		openFileButton.setToolTipText("Abrir arquivo");
+		
+		Icon saveFileIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "save.png"));
+		saveFileButton = new JButton(saveFileIcon);
+		saveFileButton.setToolTipText("Salvar arquivo");
+		
+		fileToolbar.add(newFileButton);
 		fileToolbar.add(openFileButton);
 		fileToolbar.add(saveFileButton);
 		
 		
+		
+		// Componentes da barra de ferramentas de rede
 		networkComponentsToolbar = new JToolBar();
 		networkComponentsToolbar.setName("Network components");
 		
-		addPlaceButton = new JButton("Add place");
-		addTransitionButton = new JButton("Add transition");
-		addEdgeButton = new JButton("add edge");
+		Icon newPlaceIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "circle_stroked.png"));
+		addPlaceButton = new JButton(newPlaceIcon);
+		addPlaceButton.setToolTipText("Adicionar lugar");
+		
+		Icon newTransitionIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "pipe.png"));
+		addTransitionButton = new JButton(newTransitionIcon);
+		addTransitionButton.setToolTipText("Adicionar transição");
+		
+		Icon newEdgeIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "arrow_alt_right.png"));
+		addEdgeButton = new JButton(newEdgeIcon);
+		addEdgeButton.setToolTipText("Adicionar aresta");
 		
 		networkComponentsToolbar.add(addPlaceButton);
 		networkComponentsToolbar.add(addTransitionButton);
 		networkComponentsToolbar.add(addEdgeButton);
+		
+		
 		
 		toolbarPanel.add(fileToolbar);
 		toolbarPanel.add(networkComponentsToolbar);
