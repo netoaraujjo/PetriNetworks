@@ -1,26 +1,24 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PetriNetwork {
 
 	private ArrayList<Place> places;
 	private ArrayList<Transition> transitions;
-	private ArrayList<Edge> edges;
+	private Map<String, ArrayList<Edge>> edges = new HashMap<>();
 	private ArrayList<Integer> configuration = new ArrayList<Integer>();
-	private ArrayList<Integer> initialConfiguration = new ArrayList<Integer>();
-	private int[][] incidenceMatrix;
 
-	public PetriNetwork(ArrayList<Place> places, ArrayList<Transition> transitions, ArrayList<Edge> edges) {
+	public PetriNetwork(ArrayList<Place> places, ArrayList<Transition> transitions,
+			Map<String, ArrayList<Edge>> edges) {
 
 		this.places = places;
 		this.transitions = transitions;
 		this.edges = edges;
 
-		this.setIncidenceMatrix(new int[transitions.size()][places.size()]);
-
 		configurationRefresh();
-		this.initialConfiguration = this.configuration;
 
 		transitionsRefresh();
 
@@ -28,26 +26,35 @@ public class PetriNetwork {
 
 	public PetriNetwork(PetriNetwork petriNetwork) {
 
+		// Cria nova lista de lugares
 		this.places = new ArrayList<Place>();
+		
+		// Iteração para cada lugar da RdP a ser clona
 		for (Place place : petriNetwork.places) {
 			this.places.add(place.clone());
 		}
 
+		// Cria nova lista de transições
 		this.transitions = new ArrayList<Transition>();
+		// Cria novo hash de arestas
+		this.edges = new HashMap<>();
+		
+		// Iteração para cada transição da RdP a ser clonada
 		for (Transition transition : petriNetwork.transitions) {
 			this.transitions.add(transition.clone());
+			
+			// Cria nova lista de arestas para a transição atual
+			ArrayList<Edge> edgesList = new ArrayList<Edge>();
+			// Iteração para cada aresta, relacionada a transição atual, da RdP a ser clonada
+			for (Edge edge : petriNetwork.edges.get(transition.getLabel())) {
+				edgesList.add(edge.clone());
+			}
+			this.edges.put(transition.getLabel(), edgesList);
+			
 		}
 
-		this.edges = new ArrayList<Edge>();
-		for (Edge edge : petriNetwork.edges) {
-			this.edges.add(edge.clone());
-		}
-
-//		FALTA ARRUMAR
-//		this.setIncidenceMatrix(new int[transitions.size()][places.size()]);
-
+		// Nova configuração baseada na configuração da RdP a ser clonada
 		this.configuration = new ArrayList<Integer>(petriNetwork.configuration);
-		this.initialConfiguration = new ArrayList<Integer>(petriNetwork.initialConfiguration);
 
 	}
 
@@ -72,7 +79,7 @@ public class PetriNetwork {
 		for (Transition transition : this.transitions) {
 
 			boolean active = false;
-			for (Edge edge : this.edges) {
+			for (Edge edge : this.getEdges().get(transition.getLabel())) {
 
 				// Transição é o destino da aresta
 				if (transition.getLabel().equals(edge.getDestiny().getLabel())) {
@@ -96,11 +103,11 @@ public class PetriNetwork {
 
 	}
 
-	public ArrayList<Edge> getEdges() {
+	public Map<String, ArrayList<Edge>> getEdges() {
 		return edges;
 	}
 
-	public void setEdges(ArrayList<Edge> edges) {
+	public void setEdges(Map<String, ArrayList<Edge>> edges) {
 		this.edges = edges;
 	}
 
@@ -122,14 +129,6 @@ public class PetriNetwork {
 		}
 	}
 
-	public ArrayList<Integer> getInitialConfiguration() {
-		return initialConfiguration;
-	}
-
-	public void setInitialConfiguration(ArrayList<Integer> initialConfiguration) {
-		this.initialConfiguration = initialConfiguration;
-	}
-
 	@Override
 	public String toString() {
 		String str = "";
@@ -137,7 +136,6 @@ public class PetriNetwork {
 		str += "Lugares: " + getPlaces() + "\n";
 		str += "Transições: " + getTransitions() + "\n";
 		str += "Arestas: " + getEdges() + "\n";
-		str += "Configuração inicial: " + getInitialConfiguration() + "\n";
 		str += "Configuração atual: " + getConfiguration() + "\n";
 
 		return str;
@@ -152,13 +150,12 @@ public class PetriNetwork {
 
 		if (transition.isActive()) {
 
-			for (Edge edge : petriNetwork.getEdges()) {
+			for (Edge edge : petriNetwork.getEdges().get(transition.getLabel())) {
 
 				// Se a transição for origem
 				if (edge.getOrigin().getLabel().equals(transition.getLabel())) {
 
 					Place p = (Place) edge.getDestiny();
-					// p = p.clone();
 					// Incrementa fichas de acordo com o peso da aresta
 					p.setQntCoin(p.getQntCoin() + edge.getWeight());
 
@@ -166,7 +163,6 @@ public class PetriNetwork {
 				} else if (edge.getDestiny().getLabel().equals(transition.getLabel())) {
 
 					Place p = (Place) edge.getOrigin();
-					// p = p.clone();
 					// Decrementa fichas de acordo com o peso da aresta
 					p.setQntCoin(p.getQntCoin() - edge.getWeight());
 
@@ -181,27 +177,6 @@ public class PetriNetwork {
 		} else {
 			return null;
 		}
-	}
-
-	public int[][] getIncidenceMatrix() {
-		return incidenceMatrix;
-	}
-
-	public void setIncidenceMatrix(int[][] incidenceMatrix) {
-		this.incidenceMatrix = incidenceMatrix;
-	}
-	
-	public String incidenceMatrixToString() {
-		String str = "";
-		
-		for (int i = 0; i < incidenceMatrix.length; i++) {
-			for (int j = 0; j < incidenceMatrix[i].length; j++) {
-				str += incidenceMatrix[i][j] + " ";
-			}
-			str += "\n";
-		}
-		
-		return str;
 	}
 
 }
