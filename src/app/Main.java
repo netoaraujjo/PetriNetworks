@@ -7,6 +7,7 @@ import java.util.Map;
 public class Main {
 
 	public static void main(String[] args) {
+		/* -------------------- Simula leitura de arquivo -------------------- */
 		// Lugares da rede
 		Place p1, p2, p3, p4;
 		p1 = new Place("p1", 1);
@@ -53,11 +54,16 @@ public class Main {
 		edgesList.add(new Edge(t3, p3, 1));
 		edgesList.add(new Edge(t3, p4, 1));
 		edges.put(t3.getLabel(), edgesList);
+		/* ------------------------------------------------------------------- */
 
-		// Criando rede de Petri inicial
+		
+		/* ---------------------- Cria rede de Petri inicial ---------------------- */
 		PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
 		System.out.println("[ORIGINAL]:\n" + petriNetwork);
+		/* ------------------------------------------------------------------------ */
 
+		
+		/* ------------ Imprime primeiro nível da árvore de alcançailidade ------------ */
 		System.out.println("TRANSIÇÕES POSSÍVEIS:");
 		for (Transition transition : petriNetwork.getTransitions()) {
 			System.out.println("[" + transition + "]:");
@@ -69,7 +75,10 @@ public class Main {
 				System.out.println("Transição está inativa!\n");
 			}
 		}
+		/* ---------------------------------------------------------------------------- */
 
+		
+		/* ---------------------- Calcula matriz de incidência ---------------------- */
 		int[][] incidenceMatrix = new int[transitions.size()][places.size()];
 
 		for (int i = 0; i < incidenceMatrix.length; i++) {
@@ -114,9 +123,11 @@ public class Main {
 
 		System.out
 				.println("\n[Matriz de Incidência]:\n" + incidenceMatrixToString(incidenceMatrix));
+		/* -------------------------------------------------------------------------- */
 
 	}
 
+	/* ---------------------- Imprime matriz de incidência ---------------------- */
 	public static String incidenceMatrixToString(int[][] incidenceMatrix) {
 		String str = "";
 		
@@ -129,5 +140,6 @@ public class Main {
 
 		return str;
 	}
+	/* -------------------------------------------------------------------------- */
 
 }

@@ -147,6 +147,7 @@ public class PetriNetwork {
 
 	public PetriNetwork transitionMovement(Transition transition) {
 		PetriNetwork petriNetwork = clone();
+		transition = transition.clone();
 
 		if (transition.isActive()) {
 
