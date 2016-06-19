@@ -12,12 +12,6 @@ public class Edge {
 		this.weight = weight;
 	}
 
-	public Edge(Edge edge) {
-		this.origin = edge.origin;
-		this.destiny = edge.destiny;
-		this.weight = edge.weight;
-	}
-
 	public State getOrigin() {
 		return origin;
 	}
@@ -45,10 +39,6 @@ public class Edge {
 	@Override
 	public String toString() {
 		return origin.getLabel() + "-" + getWeight() + "-" + destiny.getLabel();
-	}
-
-	public Edge clone() {
-		return new Edge(this);
 	}
 
 }

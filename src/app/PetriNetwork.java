@@ -36,25 +36,59 @@ public class PetriNetwork {
 
 		// Cria nova lista de transições
 		this.transitions = new ArrayList<Transition>();
+		
 		// Cria novo hash de arestas
 		this.edges = new HashMap<>();
 		
 		// Iteração para cada transição da RdP a ser clonada
 		for (Transition transition : petriNetwork.transitions) {
-			this.transitions.add(transition.clone());
-			
+			// Clone da transição atual
+			Transition transition_aux = transition.clone(); 
+			this.transitions.add(transition_aux);
+		
 			// Cria nova lista de arestas para a transição atual
 			ArrayList<Edge> edgesList = new ArrayList<Edge>();
+			
 			// Iteração para cada aresta, relacionada a transição atual, da RdP a ser clonada
-			for (Edge edge : petriNetwork.edges.get(transition.getLabel())) {
-				edgesList.add(edge.clone());
+			for (Edge edge : petriNetwork.edges.get(transition_aux.getLabel())) {
+				// Se a transição for origem
+				if (edge.getOrigin().getLabel().equals(transition_aux.getLabel())) {
+					
+					// Iteração para cada lugar
+					for (Place place_aux : this.places) {
+						if (place_aux.getLabel().equals(edge.getDestiny().getLabel())) {
+							// Adicionado na lista a transição clonada e o lugar clonado
+							edgesList.add(new Edge(transition_aux, place_aux, edge.getWeight()));
+						}
+					}
+					
+
+					// Se a transição for destino
+				} else if (edge.getDestiny().getLabel().equals(transition.getLabel())) {
+
+					// Iteração para cada lugar
+					for (Place place_aux : this.places) {
+						if (place_aux.getLabel().equals(edge.getOrigin().getLabel())) {
+							// Adicionado na lista a transição clonada e o lugar clonado
+							edgesList.add(new Edge(place_aux, transition_aux, edge.getWeight()));
+						}
+					}
+					
+
+				}
+				
 			}
-			this.edges.put(transition.getLabel(), edgesList);
+			
+			// Adicionada ao 'hash' a transição clonada e a lista com as arestas clonada
+			this.edges.put(transition_aux.getLabel(), edgesList);
 			
 		}
-
+		
 		// Nova configuração baseada na configuração da RdP a ser clonada
-		this.configuration = new ArrayList<Integer>(petriNetwork.configuration);
+		this.configuration = new ArrayList<Integer>();
+		for (Integer integer : petriNetwork.configuration) {
+			this.configuration.add(new Integer(integer));
+		}
 
 	}
 

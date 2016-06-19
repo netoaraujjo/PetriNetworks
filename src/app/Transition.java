@@ -10,7 +10,7 @@ public class Transition extends State {
 	}
 
 	public Transition(Transition transition) {
-		super(transition.getLabel());
+		super(new String(transition.getLabel()));
 		setActive(transition.isActive());
 	}
 

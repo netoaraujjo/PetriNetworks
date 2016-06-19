@@ -10,7 +10,7 @@ public class Place extends State {
 	}
 
 	public Place(Place place) {
-		super(place.getLabel());
+		super(new String (place.getLabel()));
 		this.qntCoin = place.qntCoin;
 	}
 
