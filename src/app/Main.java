@@ -147,9 +147,9 @@ public class Main {
 
 		// Lista auxiliar para colocar os nós do próximo nível
 		ArrayList<Tree> listTrees = new ArrayList<Tree>();
-		
+
 		while (true) {
-			
+
 			// Testa se o nó já é terminal ou duplicado, para assim não gerar
 			// novos filhos
 			if (!treeAux.isTerminal() && !treeAux.isDuplicate()) {
@@ -161,20 +161,23 @@ public class Main {
 				}
 
 				// Se nenhum filho foi gerado
-				if (listTrees.isEmpty()) {
+				if (listTrees.isEmpty())
 					break;
-				}
 
 				// Atualização do nó atual
 				treeAux = listTrees.get(0);
 				listTrees.remove(0);
-				
+
 			} else {
-				
+
+				// Se nenhum filho foi gerado
+				if (listTrees.isEmpty())
+					break;
+
 				// Atualização do nó atual
 				treeAux = listTrees.get(0);
 				listTrees.remove(0);
-				
+
 			}
 
 		}
