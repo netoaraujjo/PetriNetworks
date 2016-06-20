@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Tree {
 
 	private PetriNetwork node;
-	private int[][] incidenceMatrix;
 
 	private boolean terminal;
 	private boolean duplicate;
@@ -16,10 +15,9 @@ public class Tree {
 	private ArrayList<ArrayList<Integer>> generatedNodes;
 	private ArrayList<ArrayList<Integer>> pathGenerated;
 
-	public Tree(PetriNetwork node, int[][] incidenceMatrix, ArrayList<ArrayList<Integer>> generatedNodes,
+	public Tree(PetriNetwork node, ArrayList<ArrayList<Integer>> generatedNodes,
 			ArrayList<ArrayList<Integer>> pathGenerated) {
 		this.node = node.clone();
-		this.incidenceMatrix = incidenceMatrix;
 		this.duplicate = false;
 		this.blockade = false;
 		this.limited = false;
@@ -41,14 +39,6 @@ public class Tree {
 
 	public void setChildrens(ArrayList<Tree> childrens) {
 		this.childrens = childrens;
-	}
-
-	public int[][] getIncidenceMatrix() {
-		return incidenceMatrix;
-	}
-
-	public void setIncidenceMatrix(int[][] incidenceMatrix) {
-		this.incidenceMatrix = incidenceMatrix;
 	}
 
 	public boolean isTerminal() {
@@ -97,22 +87,6 @@ public class Tree {
 
 	public void setPathGenerated(ArrayList<ArrayList<Integer>> pathGenerated) {
 		this.pathGenerated = pathGenerated;
-	}
-
-	/*
-	 * Imprime matriz de incidência
-	 */
-	public String incidenceMatrixToString() {
-		String str = "";
-
-		for (int i = 0; i < this.incidenceMatrix.length; i++) {
-			for (int j = 0; j < this.incidenceMatrix[i].length; j++) {
-				str += this.incidenceMatrix[i][j] + " ";
-			}
-			str += "\n";
-		}
-
-		return str;
 	}
 
 	public void generateChildrens() {
@@ -170,7 +144,7 @@ public class Tree {
 				}
 
 				// Geração de novo nó
-				Tree newTree = new Tree(newNode, incidenceMatrix, this.generatedNodes, pathGenerated);
+				Tree newTree = new Tree(newNode, this.generatedNodes, pathGenerated);
 				newTree.setDuplicate(duplicate);
 				this.childrens.add(newTree);
 

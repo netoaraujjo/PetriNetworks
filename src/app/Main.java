@@ -69,78 +69,9 @@ public class Main {
 		 * ---------------------------------------------------------------------
 		 */
 
-		/*
-		 * Imprime primeiro nível da árvore de alcançabilidade
-		 */
-		System.out.println("TRANSIÇÕES POSSÍVEIS:");
-		for (Transition transition : petriNetwork.getTransitions()) {
-			System.out.println("[" + transition + "]:");
-			PetriNetwork pn = petriNetwork.transitionMovement(transition);
-
-			if (pn != null) {
-				System.out.println(pn);
-			} else {
-				System.out.println("Transição está inativa!\n");
-			}
-		}
-		/*
-		 * ---------------------------------------------------------------------
-		 */
-
-		/*
-		 * Calcula matriz de incidência
-		 */
-		int[][] incidenceMatrix = new int[transitions.size()][places.size()];
-
-		for (int i = 0; i < incidenceMatrix.length; i++) {
-			// Transição relativa ao número da linha
-			Transition transition = petriNetwork.getTransitions().get(i);
-
-			for (int j = 0; j < incidenceMatrix[i].length; j++) {
-				// Lugar relativo ao número da coluna
-				Place place = petriNetwork.getPlaces().get(j);
-
-				// Valor a ser inserido na matriz de incidência
-				int value = 0;
-
-				// Arestas da transição atual
-				for (Edge edge : petriNetwork.getEdges().get(transition.getLabel())) {
-
-					// Se a transição atual for origem e o destino for o lugar
-					// atual
-					if (edge.getOrigin().getLabel().equals(transition.getLabel())
-							&& edge.getDestiny().getLabel().equals(place.getLabel())) {
-
-						// Incrementa valor de acordo com o peso da aresta
-						value += edge.getWeight();
-
-						// Se a transição atual for destino e a origem for o
-						// lugar atual
-					} else if (edge.getDestiny().getLabel().equals(transition.getLabel())
-							&& edge.getOrigin().getLabel().equals(place.getLabel())) {
-
-						// Decrementa valor de acordo com o peso da aresta
-						value -= edge.getWeight();
-
-					}
-
-				}
-
-				incidenceMatrix[i][j] = value;
-
-			}
-
-		}
-
-		/*
-		 * ---------------------------------------------------------------------
-		 */
-
-		Tree tree = new Tree(petriNetwork, incidenceMatrix, new ArrayList<ArrayList<Integer>>(),
-				new ArrayList<ArrayList<Integer>>());
+		Tree tree = new Tree(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
 		tree.getGeneratedNodes().add(tree.getNode().getConfiguration());
 		tree.getPathGenerated().add(tree.getNode().getConfiguration());
-		System.out.println("\n[Matriz de Incidência]:\n" + tree.incidenceMatrixToString());
 
 		// Árvore para auxiliar geração dos nós do próximo nível
 		Tree treeAux = tree;
