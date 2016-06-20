@@ -1,6 +1,8 @@
 package app;
 
 public class Place extends State {
+	
+	public final static int W = 999;
 
 	private int qntCoin;
 
