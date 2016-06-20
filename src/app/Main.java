@@ -69,49 +69,9 @@ public class Main {
 		 * ---------------------------------------------------------------------
 		 */
 
-		Tree tree = new Tree(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
-		tree.getGeneratedNodes().add(tree.getNode().getConfiguration());
-		tree.getPathGenerated().add(tree.getNode().getConfiguration());
-
-		// Árvore para auxiliar geração dos nós do próximo nível
-		Tree treeAux = tree;
-
-		// Lista auxiliar para colocar os nós do próximo nível
-		ArrayList<Tree> listTrees = new ArrayList<Tree>();
-
-		while (true) {
-
-			// Testa se o nó já é terminal ou duplicado, para assim não gerar
-			// novos filhos
-			if (!treeAux.isTerminal() && !treeAux.isDuplicate()) {
-
-				// Gera os nós do próximo nível
-				treeAux.generateChildrens();
-				for (Tree child : treeAux.getChildrens()) {
-					listTrees.add(child);
-				}
-
-				// Se nenhum filho foi gerado
-				if (listTrees.isEmpty())
-					break;
-
-				// Atualização do nó atual
-				treeAux = listTrees.get(0);
-				listTrees.remove(0);
-
-			} else {
-
-				// Se nenhum filho foi gerado
-				if (listTrees.isEmpty())
-					break;
-
-				// Atualização do nó atual
-				treeAux = listTrees.get(0);
-				listTrees.remove(0);
-
-			}
-
-		}
+		Node node = new Node(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
+		Tree tree = new Tree(node);
+		tree.generatedTree();
 
 		System.out.println("\n[Árvore]:\n" + tree);
 

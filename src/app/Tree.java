@@ -4,172 +4,69 @@ import java.util.ArrayList;
 
 public class Tree {
 
-	private PetriNetwork node;
+	private Node node;
 
-	private boolean terminal;
-	private boolean duplicate;
-	private boolean blockade;
-	private boolean limited;
-
-	private ArrayList<Tree> childrens = new ArrayList<Tree>();
-	private ArrayList<ArrayList<Integer>> generatedNodes;
-	private ArrayList<ArrayList<Integer>> pathGenerated;
-
-	public Tree(PetriNetwork node, ArrayList<ArrayList<Integer>> generatedNodes,
-			ArrayList<ArrayList<Integer>> pathGenerated) {
-		this.node = node.clone();
-		this.duplicate = false;
-		this.blockade = false;
-		this.limited = false;
-		this.generatedNodes = generatedNodes;
-		this.pathGenerated = pathGenerated;
-	}
-
-	public PetriNetwork getNode() {
-		return node;
-	}
-
-	public void setNode(PetriNetwork node) {
+	public Tree(Node node) {
 		this.node = node;
 	}
 
-	public ArrayList<Tree> getChildrens() {
-		return childrens;
+	public Node getNode() {
+		return node;
 	}
 
-	public void setChildrens(ArrayList<Tree> childrens) {
-		this.childrens = childrens;
+	public void setNode(Node node) {
+		this.node = node;
 	}
 
-	public boolean isTerminal() {
-		return terminal;
-	}
+	public void generatedTree() {
 
-	public void setTerminal(boolean terminal) {
-		this.terminal = terminal;
-	}
+		node.getGeneratedNodes().add(node.getPetriNetwork().getConfiguration());
+		node.getPathGenerated().add(node.getPetriNetwork().getConfiguration());
 
-	public boolean isDuplicate() {
-		return duplicate;
-	}
+		// Árvore para auxiliar geração dos nós do próximo nível
+		Node nodeAux = node;
 
-	public void setDuplicate(boolean duplicate) {
-		this.duplicate = duplicate;
-	}
+		// Lista auxiliar para colocar os nós do próximo nível
+		ArrayList<Node> listNodes = new ArrayList<Node>();
 
-	public boolean isBlockade() {
-		return blockade;
-	}
+		while (true) {
 
-	public void setBlockade(boolean blockade) {
-		this.blockade = blockade;
-	}
+			// Testa se o nó já é terminal ou duplicado, para assim não gerar
+			// novos filhos
+			if (!nodeAux.isTerminal() && !nodeAux.isDuplicate()) {
 
-	public boolean isLimited() {
-		return limited;
-	}
-
-	public void setLimited(boolean limited) {
-		this.limited = limited;
-	}
-
-	public ArrayList<ArrayList<Integer>> getGeneratedNodes() {
-		return generatedNodes;
-	}
-
-	public void setGeneratedNodes(ArrayList<ArrayList<Integer>> generatedNodes) {
-		this.generatedNodes = generatedNodes;
-	}
-
-	public ArrayList<ArrayList<Integer>> getPathGenerated() {
-		return pathGenerated;
-	}
-
-	public void setPathGenerated(ArrayList<ArrayList<Integer>> pathGenerated) {
-		this.pathGenerated = pathGenerated;
-	}
-
-	public void generateChildrens() {
-
-		// Enquanto não for feito o teste, o nó é considerado terminal
-		this.terminal = true;
-
-		// Avaliação da função de transição para todas as transições
-		for (Transition transition : node.getTransitions()) {
-
-			// Nova RdP a ser criada
-			PetriNetwork newNode = node.transitionMovement(transition);
-
-			// Se existe pelo menos uma transição habilitada a disparar, o nó é
-			// desmarcado como terminal
-			if (newNode != null) {
-
-				// Clona a lista de configurações do caminho
-				ArrayList<ArrayList<Integer>> pathGenerated = new ArrayList<ArrayList<Integer>>();
-				for (ArrayList<Integer> arrayList : this.pathGenerated) {
-					ArrayList<Integer> arrayListAux = new ArrayList<Integer>();
-					for (Integer integer : arrayList) {
-						arrayListAux.add(new Integer(integer));
-					}
-					pathGenerated.add(arrayListAux);
+				// Gera os nós do próximo nível
+				nodeAux.generateChildrens();
+				for (Node child : nodeAux.getChildrens()) {
+					listNodes.add(child);
 				}
 
-				// Iteração sobre todos nós gerados referente ao caminho atual
-				for (ArrayList<Integer> configuration : pathGenerated) {
-					// Se a nova configuração dominar alguma configuração do
-					// caminho
-					if (dominates(newNode.getConfiguration(), configuration)) {
-						// Seta valor W para todo lugar que tenha mais fichas do
-						// que um lugar pertencente a algum nó do caminho
-						for (int i = 0; i < configuration.size(); i++) {
-							if (newNode.getConfiguration().get(i) > configuration.get(i))
-								newNode.getPlaces().get(i).setQntCoin(Place.W);
-						}
-						newNode.configurationRefresh();
-						newNode.transitionsRefresh();
-					}
-				}
+				// Se nenhum filho foi gerado
+				if (listNodes.isEmpty())
+					break;
 
-				pathGenerated.add(newNode.getConfiguration());
+				// Atualização do nó atual
+				nodeAux = listNodes.get(0);
+				listNodes.remove(0);
 
-				this.terminal = false;
+			} else {
 
-				boolean duplicate;
-				// RdP já foi criada anteriormente
-				if (getGeneratedNodes().contains(newNode.getConfiguration())) {
-					duplicate = true;
-				} else {
-					duplicate = false;
-					this.generatedNodes.add(newNode.getConfiguration());
-				}
+				// Se nenhum filho foi gerado
+				if (listNodes.isEmpty())
+					break;
 
-				// Geração de novo nó
-				Tree newTree = new Tree(newNode, this.generatedNodes, pathGenerated);
-				newTree.setDuplicate(duplicate);
-				this.childrens.add(newTree);
+				// Atualização do nó atual
+				nodeAux = listNodes.get(0);
+				listNodes.remove(0);
 
 			}
 
 		}
-
-	}
-
-	private boolean dominates(ArrayList<Integer> newConfiguration, ArrayList<Integer> configuration) {
-		boolean flag = true;
-
-		for (int i = 0; i < newConfiguration.size(); i++) {
-			if (newConfiguration.get(i) < configuration.get(i)) {
-				flag = false;
-				break;
-			}
-		}
-
-		return flag;
 	}
 
 	@Override
 	public String toString() {
-		return "Tree [node=" + node.getConfiguration() + ", childrens=" + childrens + "]";
+		return "Tree " + node;
 	}
-
+	
 }
