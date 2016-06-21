@@ -18,9 +18,8 @@ public class Node {
 	public Node(PetriNetwork petriNetwork, ArrayList<ArrayList<Integer>> generatedNodes,
 			ArrayList<ArrayList<Integer>> pathGenerated) {
 		this.petriNetwork = petriNetwork.clone();
-		this.duplicate = false;
 		this.blockade = false;
-		this.limited = false;
+		this.limited = true;
 		this.generatedNodes = generatedNodes;
 		this.pathGenerated = pathGenerated;
 	}
@@ -94,8 +93,13 @@ public class Node {
 		// Enquanto não for feito o teste, o nó é considerado terminal
 		this.terminal = true;
 
+		this.blockade = true;
+
 		// Avaliação da função de transição para todas as transições
 		for (Transition transition : petriNetwork.getTransitions()) {
+
+			if (transition.isActive())
+				this.blockade = false;
 
 			// Nova RdP a ser criada
 			PetriNetwork newPN = petriNetwork.transitionMovement(transition);
@@ -114,6 +118,7 @@ public class Node {
 					pathGenerated.add(arrayListAux);
 				}
 
+				boolean limited = true;
 				// Iteração sobre todos nós gerados referente ao caminho atual
 				for (ArrayList<Integer> configuration : pathGenerated) {
 					// Se a nova configuração dominar alguma configuração do
@@ -122,8 +127,10 @@ public class Node {
 						// Seta valor W para todo lugar que tenha mais fichas do
 						// que um lugar pertencente a algum nó do caminho
 						for (int i = 0; i < configuration.size(); i++) {
-							if (newPN.getConfiguration().get(i) > configuration.get(i))
+							if (newPN.getConfiguration().get(i) > configuration.get(i)) {
 								newPN.getPlaces().get(i).setQntCoin(Place.W);
+								limited = false;
+							}
 						}
 						newPN.configurationRefresh();
 						newPN.transitionsRefresh();
@@ -146,6 +153,7 @@ public class Node {
 				// Geração de novo nó
 				Node newNode = new Node(newPN, this.generatedNodes, pathGenerated);
 				newNode.setDuplicate(duplicate);
+				newNode.setLimited(limited);
 				this.childrens.add(newNode);
 
 			}

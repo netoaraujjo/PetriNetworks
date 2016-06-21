@@ -38,6 +38,9 @@ public class Tree {
 				// Gera os nós do próximo nível
 				nodeAux.generateChildrens();
 				for (Node child : nodeAux.getChildrens()) {
+					// Se o pai é não-limitado, o filho criado também será
+					if (!nodeAux.isLimited())
+						child.setLimited(false);
 					listNodes.add(child);
 				}
 
