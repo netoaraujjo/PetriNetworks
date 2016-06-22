@@ -23,22 +23,23 @@ public class Tree {
 		node.getGeneratedNodes().add(node.getPetriNetwork().getConfiguration());
 		node.getPathGenerated().add(node.getPetriNetwork().getConfiguration());
 
-		// Árvore para auxiliar geração dos nós do próximo nível
+		// Ã�rvore para auxiliar geraÃ§Ã£o dos nÃ³s do prÃ³ximo nÃ­vel
 		Node nodeAux = node;
 
-		// Lista auxiliar para colocar os nós do próximo nível
+		// Lista auxiliar para colocar os nÃ³s do prÃ³ximo nÃ­vel
 		ArrayList<Node> listNodes = new ArrayList<Node>();
 
 		while (true) {
 
-			// Testa se o nó já é terminal ou duplicado, para assim não gerar
+			// Testa se o nÃ³ jÃ¡ Ã© terminal ou duplicado, para assim nÃ£o
+			// gerar
 			// novos filhos
 			if (!nodeAux.isTerminal() && !nodeAux.isDuplicate()) {
 
-				// Gera os nós do próximo nível
+				// Gera os nÃ³s do prÃ³ximo nÃ­vel
 				nodeAux.generateChildrens();
 				for (Node child : nodeAux.getChildrens()) {
-					// Se o pai é não-limitado, o filho criado também será
+					// Se o pai Ã© nÃ£o-limitado, o filho criado tambÃ©m serÃ¡
 					if (!nodeAux.isLimited())
 						child.setLimited(false);
 					listNodes.add(child);
@@ -48,7 +49,7 @@ public class Tree {
 				if (listNodes.isEmpty())
 					break;
 
-				// Atualização do nó atual
+				// AtualizaÃ§Ã£o do nÃ³ atual
 				nodeAux = listNodes.get(0);
 				listNodes.remove(0);
 
@@ -58,7 +59,7 @@ public class Tree {
 				if (listNodes.isEmpty())
 					break;
 
-				// Atualização do nó atual
+				// AtualizaÃ§Ã£o do nÃ³ atual
 				nodeAux = listNodes.get(0);
 				listNodes.remove(0);
 
@@ -67,9 +68,68 @@ public class Tree {
 		}
 	}
 
+	public boolean conservatedTree() {
+		node.getGeneratedNodes().add(node.getPetriNetwork().getConfiguration());
+		node.getPathGenerated().add(node.getPetriNetwork().getConfiguration());
+
+		// Ã�rvore para auxiliar geraÃ§Ã£o dos nÃ³s do prÃ³ximo nÃ­vel
+		Node nodeAux = node;
+		int qtdFichas = 0;
+		int qtdFichasFilho = 0;
+
+		for (int i = 0; i < node.getPetriNetwork().getConfiguration().size(); i++) {
+			qtdFichas += node.getPetriNetwork().getConfiguration().get(i);
+		}
+
+		// Lista auxiliar para colocar os nÃ³s do prÃ³ximo nÃ­vel
+		ArrayList<Node> listNodes = new ArrayList<Node>();
+
+		while (true) {
+
+			// Testa se o nÃ³ jÃ¡ Ã© terminal ou duplicado, para assim nÃ£o
+			// gerar
+			// novos filhos
+			if (!nodeAux.isTerminal() && !nodeAux.isDuplicate()) {
+
+				for (Node child : nodeAux.getChildrens()) {
+					listNodes.add(child);
+					qtdFichasFilho = 0;
+					for (Integer weight : child.getPetriNetwork().getConfiguration()) {
+						qtdFichasFilho += weight;
+					}
+
+					if (qtdFichasFilho != qtdFichas)
+						return false;
+				}
+
+				// Se nenhum filho foi gerado
+				if (listNodes.isEmpty())
+					break;
+
+				// AtualizaÃ§Ã£o do nÃ³ atual
+				nodeAux = listNodes.get(0);
+				listNodes.remove(0);
+
+			} else {
+
+				// Se nenhum filho foi gerado
+				if (listNodes.isEmpty())
+					break;
+
+				// AtualizaÃ§Ã£o do nÃ³ atual
+				nodeAux = listNodes.get(0);
+				listNodes.remove(0);
+
+			}
+
+		}
+
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		return "Tree " + node;
 	}
-	
+
 }

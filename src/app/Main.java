@@ -17,11 +17,11 @@ public class Main {
 		p3 = new Place("p3", 0);
 		p4 = new Place("p4", 0);
 
-		// Transições da rede
+		// Transi��es da rede
 		Transition t1, t2, t3;
 		t1 = new Transition("t1", false);
 		t2 = new Transition("t2", false);
-		t3 = new Transition("t3", false);
+		//t3 = new Transition("t3", false);
 
 		ArrayList<Place> places = new ArrayList<Place>();
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
@@ -33,29 +33,30 @@ public class Main {
 		places.add(p3);
 		places.add(p4);
 
-		// Adicionando transições ao ArrayList
+		// Adicionando transi��es ao ArrayList
 		transitions.add(t1);
 		transitions.add(t2);
-		transitions.add(t3);
+		//transitions.add(t3);
 
 		// Adicionando arestas ao ArrayList
 		ArrayList<Edge> edgesList = new ArrayList<Edge>();
 		edgesList.add(new Edge(p1, t1, 1));
 		edgesList.add(new Edge(t1, p2, 1));
-		edgesList.add(new Edge(t1, p3, 1));
+		//edgesList.add(new Edge(t1, p3, 1));
 		edges.put(t1.getLabel(), edgesList);
 
 		edgesList = new ArrayList<Edge>();
 		edgesList.add(new Edge(p2, t2, 1));
-		edgesList.add(new Edge(t2, p1, 1));
+		edgesList.add(new Edge(t2, p3, 1));
+		edgesList.add(new Edge(t2, p4, 1));
 		edges.put(t2.getLabel(), edgesList);
 
-		edgesList = new ArrayList<Edge>();
+		/*edgesList = new ArrayList<Edge>();
 		edgesList.add(new Edge(p2, t3, 1));
 		edgesList.add(new Edge(p3, t3, 1));
 		edgesList.add(new Edge(t3, p3, 1));
 		edgesList.add(new Edge(t3, p4, 1));
-		edges.put(t3.getLabel(), edgesList);
+		edges.put(t3.getLabel(), edgesList);*/
 		/*
 		 * -------------------------------------------------------------------
 		 */
@@ -72,8 +73,9 @@ public class Main {
 		Node node = new Node(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
 		Tree tree = new Tree(node);
 		tree.generatedTree();
-
 		System.out.println("\n[Árvore]:\n" + tree);
+		
+		System.out.println("\nÁrvore conservativa: " + tree.conservatedTree());
 
 	}
 
