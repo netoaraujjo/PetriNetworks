@@ -4,17 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.MenuBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.filechooser.FileFilter;
 
 public class MainWindow extends JFrame {
 	
@@ -92,17 +98,20 @@ public class MainWindow extends JFrame {
 		
 		fileMenu = new JMenu("Arquivo");
 		newMenuItem = new JMenuItem("Novo");
+		
 		openMenuItem = new JMenuItem("Abrir arquivo");
+		openMenuItem.addActionListener(new OpenFileHandler());
+		
 		saveMenuItem = new JMenuItem("Salvar arquivo");
 		exportMenuItem = new JMenuItem("Exportar");
 		exitMenuItem = new JMenuItem("Sair");
 		
-		fileMenu.add(newMenuItem);
+//		fileMenu.add(newMenuItem);
 		fileMenu.add(openMenuItem);
-		fileMenu.add(saveMenuItem);
-		fileMenu.add(exportMenuItem);
-		fileMenu.addSeparator();
-		fileMenu.add(exitMenuItem);
+//		fileMenu.add(saveMenuItem);
+//		fileMenu.add(exportMenuItem);
+//		fileMenu.addSeparator();
+//		fileMenu.add(exitMenuItem);
 		
 		helpMenu = new JMenu("Ajuda");
 		helpMenuItem = new JMenuItem("Ajuda");
@@ -137,14 +146,15 @@ public class MainWindow extends JFrame {
 		Icon openFileIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "open.png"));
 		openFileButton = new JButton(openFileIcon);
 		openFileButton.setToolTipText("Abrir arquivo");
+		openFileButton.addActionListener(new OpenFileHandler());
 		
 		Icon saveFileIcon = new ImageIcon(getClass().getClassLoader().getResource(iconsDir + "save.png"));
 		saveFileButton = new JButton(saveFileIcon);
 		saveFileButton.setToolTipText("Salvar arquivo");
 		
-		fileToolbar.add(newFileButton);
+//		fileToolbar.add(newFileButton);
 		fileToolbar.add(openFileButton);
-		fileToolbar.add(saveFileButton);
+//		fileToolbar.add(saveFileButton);
 		
 		
 		
@@ -171,7 +181,7 @@ public class MainWindow extends JFrame {
 		
 		
 		toolbarPanel.add(fileToolbar);
-		toolbarPanel.add(networkComponentsToolbar);
+//		toolbarPanel.add(networkComponentsToolbar);
 		
 		this.add(toolbarPanel, BorderLayout.NORTH);
 	}
@@ -184,12 +194,16 @@ public class MainWindow extends JFrame {
 		operationsPanel = new JPanel(new GridLayout(4, 1));
 		
 		spanningTreeButton =  new JButton("Árvore de cobertura");
+		spanningTreeButton.addActionListener(new SpanningTreeHandler());
 		
 		blockingStatesButton = new JButton("Estados bloqueantes");
+		blockingStatesButton.addActionListener(new BlockingStatesHandler());
 		
 		nonLimitedStatesButton = new JButton("Estados não-limitados");
+		nonLimitedStatesButton.addActionListener(new NonLimitedStatesHandler());
 		
 		networkConservationButton = new JButton("Conservação da rede");
+		networkConservationButton.addActionListener(new NetworkConservationHandler());
 		
 		operationsPanel.add(spanningTreeButton);
 		operationsPanel.add(blockingStatesButton);
@@ -203,7 +217,83 @@ public class MainWindow extends JFrame {
 	/**
 	 * Cria painel de abas
 	 */
-	private void createNetworksPane() {
+	private void createNetworksPane() { 
+	}
+	
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por manipular os eventos de abertura de arquivo
+	 */
+	private class OpenFileHandler implements ActionListener { 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicou para abrir arquivo");
+			JFileChooser fileChooser = new JFileChooser();
+			int returnVal = fileChooser.showOpenDialog(MainWindow.this);
+		}
+		
+	}
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por obter a arvore de cobertura
+	 */
+	private class SpanningTreeHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicou para árvore de cobertura");
+		}
+		
+	}
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por obter os estados bloqueados
+	 */
+	private class BlockingStatesHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicou para estados bloqueados");
+		}
+		
+	}
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por obter os estados nao-limitados
+	 */
+	private class NonLimitedStatesHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicou para estados nao limitados");
+		}
+		
+	}
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por calcular a conservacao da rede
+	 */
+	private class NetworkConservationHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicou para conservção da rede");
+		}
 		
 	}
 	
