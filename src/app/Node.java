@@ -10,6 +10,7 @@ public class Node {
 	private boolean duplicate;
 	private boolean blockade;
 	private boolean limited;
+	private boolean reachable;
 
 	private ArrayList<Node> childrens = new ArrayList<Node>();
 	private ArrayList<ArrayList<Integer>> generatedNodes;
@@ -72,6 +73,14 @@ public class Node {
 		this.limited = limited;
 	}
 
+	public boolean isReachable() {
+		return reachable;
+	}
+
+	public void setReachable(boolean reachable) {
+		this.reachable = reachable;
+	}
+
 	public ArrayList<ArrayList<Integer>> getGeneratedNodes() {
 		return generatedNodes;
 	}
@@ -104,7 +113,8 @@ public class Node {
 			// Nova RdP a ser criada
 			PetriNetwork newPN = petriNetwork.transitionMovement(transition);
 
-			// Se existe pelo menos uma transição habilitada a disparar, o nó é
+			// Se existe pelo menos uma transição habilitada a disparar, o nó
+			// é
 			// desmarcado como terminal
 			if (newPN != null) {
 
@@ -119,7 +129,8 @@ public class Node {
 				}
 
 				boolean limited = true;
-				// Iteração sobre todos nós gerados referente ao caminho atual
+				// Iteração sobre todos nós gerados referente ao caminho
+				// atual
 				for (ArrayList<Integer> configuration : pathGenerated) {
 					// Se a nova configuração dominar alguma configuração do
 					// caminho

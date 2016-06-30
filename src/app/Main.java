@@ -3,6 +3,7 @@ package app;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
 
@@ -21,7 +22,7 @@ public class Main {
 		Transition t1, t2, t3;
 		t1 = new Transition("t1", false);
 		t2 = new Transition("t2", false);
-		//t3 = new Transition("t3", false);
+		t3 = new Transition("t3", false);
 
 		ArrayList<Place> places = new ArrayList<Place>();
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
@@ -51,12 +52,12 @@ public class Main {
 		edgesList.add(new Edge(t2, p4, 1));
 		edges.put(t2.getLabel(), edgesList);
 
-		/*edgesList = new ArrayList<Edge>();
+		edgesList = new ArrayList<Edge>();
 		edgesList.add(new Edge(p2, t3, 1));
 		edgesList.add(new Edge(p3, t3, 1));
 		edgesList.add(new Edge(t3, p3, 1));
 		edgesList.add(new Edge(t3, p4, 1));
-		edges.put(t3.getLabel(), edgesList);*/
+		edges.put(t3.getLabel(), edgesList);
 		/*
 		 * -------------------------------------------------------------------
 		 */
@@ -73,9 +74,17 @@ public class Main {
 		Node node = new Node(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
 		Tree tree = new Tree(node);
 		tree.generatedTree();
-		System.out.println("\n[√Årvore]:\n" + tree);
+		System.out.println("\n[¡rvore]:\n" + tree);
 		
-		System.out.println("\n√Årvore conservativa: " + tree.conservatedTree());
+		System.out.println("\n¡rvore conservativa: " + tree.conservatedTree());
+		
+		ArrayList<Integer> nodeX = new ArrayList<Integer>();
+		nodeX.add(1);
+		nodeX.add(1);
+		nodeX.add(17);
+		nodeX.add(0);
+				
+		System.out.println("\nNÛ alcanÁ·vel: " + tree.reachableNode(nodeX));
 
 	}
 
