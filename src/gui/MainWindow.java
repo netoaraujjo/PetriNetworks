@@ -1,12 +1,17 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -20,7 +25,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import app.Edge;
+import app.PetriNetwork;
+import app.Place;
+import app.State;
+import app.Transition;
 
 public class MainWindow extends JFrame {
 	
@@ -72,7 +83,7 @@ public class MainWindow extends JFrame {
 	
 	// Painel centra e painel de abas
 	private JPanel centerPanel;
-	private JTabbedPane networksPane;
+	private JTabbedPane networksPanel;
 
 	
 	/**
@@ -86,6 +97,8 @@ public class MainWindow extends JFrame {
 		this.createToolbar();
 		
 		this.createOperationsPanel();
+		
+		this.createNetworksPanel();
 		
 	}
 	
@@ -217,22 +230,148 @@ public class MainWindow extends JFrame {
 	/**
 	 * Cria painel de abas
 	 */
-	private void createNetworksPane() { 
+	private void createNetworksPanel() { 
+		networksPanel = new JTabbedPane();		
+		this.add(networksPanel, BorderLayout.CENTER);
 	}
 	
 	
 	
 	/**
 	 * @author neto
-	 * Classe interna responsável por manipular os eventos de abertura de arquivo
+	 * Classe interna responsavel por manipular os eventos de abertura de arquivo
 	 */
 	private class OpenFileHandler implements ActionListener { 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			System.out.println("Clicou para abrir arquivo");
+//			System.out.println("Clicou para abrir arquivo");
 			JFileChooser fileChooser = new JFileChooser();
+			
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos rdp", "rdp");
+			
+			fileChooser.setFileFilter(filter);
+			
 			int returnVal = fileChooser.showOpenDialog(MainWindow.this);
+			
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				
+				fileChooser.getSelectedFile(); // retorna um File
+				
+//				System.out.println("Arquivo selecionado: " + fileChooser.getSelectedFile().getAbsolutePath());
+				
+				try {
+					Scanner input = new Scanner(fileChooser.getSelectedFile());
+					
+					String placesTmp = input.nextLine();
+					String transitionsTmp = input.nextLine();
+					List<String> edgesTmp = new ArrayList<>();
+					while (input.hasNext()) {
+						edgesTmp.add(input.nextLine());
+					}
+					
+					/*System.out.println(placesTmp);
+					System.out.println(transitionsTmp);
+					System.out.println(edgesTmp);*/
+					
+					String placesStr[] = placesTmp.trim().split(";");
+					String transitionsStr[] = transitionsTmp.trim().split(";");
+					String edgesStr[][] = new String[edgesTmp.size()][3];
+					
+					for (int i = 0; i < edgesTmp.size(); i++) {
+						edgesStr[i] = edgesTmp.get(i).trim().split("-");
+					}
+					
+					List<Place> places = new ArrayList<>();
+					
+					for (String placeStr : placesStr) {
+						String place[] = placeStr.split(",");
+						places.add(new Place(place[0], Integer.parseInt(place[1])));
+					}
+					
+					List<Transition> transitions = new ArrayList<>();
+					Map<String, ArrayList<Edge>> edges = new HashMap<>();
+					
+					for (String transitionStr : transitionsStr) {
+//						System.out.println("Add " + transitionStr + " a transicoes");
+						transitions.add(new Transition(transitionStr, false));
+						edges.put(transitionStr, new ArrayList<Edge>());
+					}
+					
+					
+					/*for (Transition transition : transitions) {
+						System.out.println(transition.getLabel());
+					}
+					for (Place place : places) {
+						System.out.println(place.getLabel());
+					}
+					System.out.println("Chaves do hash");
+					System.out.println(edges.keySet());*/
+					
+					
+//					System.out.println("Dentro da construcao do hash");
+					for (int i = 0; i < edgesStr.length; i++) {
+//						System.out.println(edgesStr[i][0]);
+						
+						State origin = null;
+						State destiny = null;
+						
+						// Verifica se o hashmap tem o label da origem como chave
+						if (edges.containsKey(edgesStr[i][0])) {
+//							System.out.println("Origem eh chave do hash/transicao");
+							// origem e uma transicao
+							for (Transition transition : transitions) {
+								if (transition.getLabel().equals(edgesStr[i][0])) {
+									origin = transition;
+									break;
+								}
+							}
+							
+							for (Place place : places) {
+								if (place.getLabel().equals(edgesStr[i][2])) {
+									destiny = place;
+									break;
+								}
+							}
+						} else {
+							// origem e um lugar
+//							System.out.println("Origem eh lugar");
+							for (Place place : places) {
+//								System.out.println("comparando " + edgesStr[i][0] + " com: " + place.getLabel());
+								if (place.getLabel().equals(edgesStr[i][0])) {
+//									System.out.println(edgesStr[i][0] + " = " + place.getLabel());
+									break;
+								}
+							}
+							
+							for (Transition transition : transitions) {
+								if (transition.getLabel().equals(edgesStr[i][2])) {
+									destiny = transition;
+									break;
+								}
+							}
+						}
+						
+						
+						
+						Edge edge = new Edge(origin, destiny, Integer.parseInt(edgesStr[i][1]));
+						
+						if (origin instanceof Transition) {
+							edges.get(origin.getLabel()).add(edge);
+						} else {
+							edges.get(destiny.getLabel()).add(edge);
+						}
+					}
+					
+					PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
+					
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(MainWindow.this, "Erro ao abrir o arquivo!", "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 		
 	}
