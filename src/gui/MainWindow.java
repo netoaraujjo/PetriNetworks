@@ -236,6 +236,18 @@ public class MainWindow extends JFrame {
 	}
 	
 	
+	/**
+	 * @param petriNetwork
+	 */
+	private void addTab(PetriNetwork petriNetwork, String fileName) {
+		TabPanel tab = new TabPanel(petriNetwork, fileName);
+		networksPanel.add("rede", tab);
+	}
+	
+	
+	/***************************************************************************
+	 * Manipuladores de eventos
+	 **************************************************************************/
 	
 	/**
 	 * @author neto
@@ -265,7 +277,7 @@ public class MainWindow extends JFrame {
 					
 					String placesTmp = input.nextLine();
 					String transitionsTmp = input.nextLine();
-					List<String> edgesTmp = new ArrayList<>();
+					ArrayList<String> edgesTmp = new ArrayList<>();
 					while (input.hasNext()) {
 						edgesTmp.add(input.nextLine());
 					}
@@ -282,14 +294,14 @@ public class MainWindow extends JFrame {
 						edgesStr[i] = edgesTmp.get(i).trim().split("-");
 					}
 					
-					List<Place> places = new ArrayList<>();
+					ArrayList<Place> places = new ArrayList<>();
 					
 					for (String placeStr : placesStr) {
 						String place[] = placeStr.split(",");
 						places.add(new Place(place[0], Integer.parseInt(place[1])));
 					}
 					
-					List<Transition> transitions = new ArrayList<>();
+					ArrayList<Transition> transitions = new ArrayList<>();
 					Map<String, ArrayList<Edge>> edges = new HashMap<>();
 					
 					for (String transitionStr : transitionsStr) {
@@ -340,6 +352,7 @@ public class MainWindow extends JFrame {
 //								System.out.println("comparando " + edgesStr[i][0] + " com: " + place.getLabel());
 								if (place.getLabel().equals(edgesStr[i][0])) {
 //									System.out.println(edgesStr[i][0] + " = " + place.getLabel());
+									origin = place;
 									break;
 								}
 							}
@@ -361,9 +374,15 @@ public class MainWindow extends JFrame {
 						} else {
 							edges.get(destiny.getLabel()).add(edge);
 						}
+						
+						
+						
 					}
 					
+					@SuppressWarnings("unused")
 					PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
+					
+					addTab(petriNetwork, fileChooser.getSelectedFile().getName());
 					
 					
 				} catch (FileNotFoundException e1) {

@@ -2,17 +2,16 @@ package app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PetriNetwork {
 
-	private List<Place> places;
-	private List<Transition> transitions;
+	private ArrayList<Place> places;
+	private ArrayList<Transition> transitions;
 	private Map<String, ArrayList<Edge>> edges = new HashMap<>();
 	private ArrayList<Integer> configuration = new ArrayList<Integer>();
 
-	public PetriNetwork(List<Place> places, List<Transition> transitions,
+	public PetriNetwork(ArrayList<Place> places, ArrayList<Transition> transitions,
 			Map<String, ArrayList<Edge>> edges) {
 
 		this.places = places;
@@ -95,7 +94,7 @@ public class PetriNetwork {
 
 	}
 
-	public List<Place> getPlaces() {
+	public ArrayList<Place> getPlaces() {
 		return places;
 	}
 
@@ -103,7 +102,7 @@ public class PetriNetwork {
 		this.places = places;
 	}
 
-	public List<Transition> getTransitions() {
+	public ArrayList<Transition> getTransitions() {
 		return transitions;
 	}
 
