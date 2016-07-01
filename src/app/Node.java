@@ -15,6 +15,10 @@ public class Node {
 	private ArrayList<Node> childrens = new ArrayList<Node>();
 	private ArrayList<ArrayList<Integer>> generatedNodes;
 	private ArrayList<ArrayList<Integer>> pathGenerated;
+	
+	private static int id = 0;
+	
+	private int nodeId;
 
 	public Node(PetriNetwork petriNetwork, ArrayList<ArrayList<Integer>> generatedNodes,
 			ArrayList<ArrayList<Integer>> pathGenerated) {
@@ -23,6 +27,14 @@ public class Node {
 		this.limited = true;
 		this.generatedNodes = generatedNodes;
 		this.pathGenerated = pathGenerated;
+		
+		id += 1;
+		
+		nodeId = id;
+	}
+	
+	public int getNodeId() {
+		return nodeId;
 	}
 
 	public PetriNetwork getPetriNetwork() {

@@ -1,0 +1,19 @@
+digraph teste3_rdp {
+	graph [pad="0.5,0.5" rankdir=LR]
+	node [fillcolor=aquamarine4 shape=circle style=filled]
+		p1 [label="p1-2"]
+		p2 [label="p2-1"]
+		p3 [label="p3-0"]
+	node [fillcolor=aquamarine4 shape=box style=filled]
+		t1
+		t2
+		t3
+			p1 -> t1 [label=1]
+			t1 -> p2 [label=1]
+			t1 -> p3 [label=1]
+			p2 -> t2 [label=1]
+			t2 -> p1 [label=1]
+			p3 -> t2 [label=1]
+			p2 -> t3 [label=1]
+			t3 -> p1 [label=1]
+}

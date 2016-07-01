@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -28,10 +26,12 @@ import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import app.Edge;
+import app.Node;
 import app.PetriNetwork;
 import app.Place;
 import app.State;
 import app.Transition;
+import app.Tree;
 
 public class MainWindow extends JFrame {
 	
@@ -63,6 +63,7 @@ public class MainWindow extends JFrame {
 	private JButton blockingStatesButton;
 	private JButton nonLimitedStatesButton;
 	private JButton networkConservationButton;
+	private JButton reachabelStateButton;
 	
 	
 	// Painel da barra de ferramentas
@@ -84,6 +85,7 @@ public class MainWindow extends JFrame {
 	// Painel centra e painel de abas
 	private JPanel centerPanel;
 	private JTabbedPane networksPanel;
+	private ArrayList<TabPanel> tabs; 
 
 	
 	/**
@@ -204,7 +206,7 @@ public class MainWindow extends JFrame {
 	 * Cria painel com os botoes de operacao
 	 */
 	private void createOperationsPanel() {
-		operationsPanel = new JPanel(new GridLayout(4, 1));
+		operationsPanel = new JPanel(new GridLayout(5, 1));
 		
 		spanningTreeButton =  new JButton("Árvore de cobertura");
 		spanningTreeButton.addActionListener(new SpanningTreeHandler());
@@ -218,10 +220,14 @@ public class MainWindow extends JFrame {
 		networkConservationButton = new JButton("Conservação da rede");
 		networkConservationButton.addActionListener(new NetworkConservationHandler());
 		
+		reachabelStateButton = new JButton("Estado alcansável");
+		reachabelStateButton.addActionListener(new ReachableStateHandler());
+		
 		operationsPanel.add(spanningTreeButton);
 		operationsPanel.add(blockingStatesButton);
 		operationsPanel.add(nonLimitedStatesButton);
 		operationsPanel.add(networkConservationButton);
+		operationsPanel.add(reachabelStateButton);
 		
 		this.add(operationsPanel, BorderLayout.WEST);
 	}
@@ -230,7 +236,8 @@ public class MainWindow extends JFrame {
 	/**
 	 * Cria painel de abas
 	 */
-	private void createNetworksPanel() { 
+	private void createNetworksPanel() {
+		tabs = new ArrayList<>();
 		networksPanel = new JTabbedPane();		
 		this.add(networksPanel, BorderLayout.CENTER);
 	}
@@ -241,7 +248,16 @@ public class MainWindow extends JFrame {
 	 */
 	private void addTab(PetriNetwork petriNetwork, String fileName) {
 		TabPanel tab = new TabPanel(petriNetwork, fileName);
-		networksPanel.add("rede", tab);
+		tabs.add(tab);
+		networksPanel.add(fileName, tab);
+		networksPanel.setSelectedIndex(networksPanel.getTabCount()-1);
+	}
+	
+	private void addTab(Tree tree, String fileName) {
+		TabPanel tab = new TabPanel(tree, fileName);
+		tabs.add(tab);
+		networksPanel.add(fileName, tab);
+		networksPanel.setSelectedIndex(networksPanel.getTabCount()-1);
 	}
 	
 	
@@ -378,8 +394,7 @@ public class MainWindow extends JFrame {
 						
 						
 					}
-					
-					@SuppressWarnings("unused")
+
 					PetriNetwork petriNetwork = new PetriNetwork(places, transitions, edges);
 					
 					addTab(petriNetwork, fileChooser.getSelectedFile().getName());
@@ -404,8 +419,14 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("Clicou para árvore de cobertura");
+			TabPanel tab = tabs.get(networksPanel.getSelectedIndex());
+			PetriNetwork petriNet = tab.getPetriNetwork();
+			
+			Node node = new Node(petriNet, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
+			Tree tree = new Tree(node);
+			tree.generatedTree();
+			
+			addTab(tree, tab.getFileName().replace(".", "_") + "_tree");
 		}
 		
 	}
@@ -449,8 +470,44 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("Clicou para conservção da rede");
+			TabPanel tab = tabs.get(networksPanel.getSelectedIndex());
+			Tree tree = tab.getTree();
+			
+			if (tree.conservatedTree()) {
+				JOptionPane.showMessageDialog(null, "A árvore é conservativa.");
+			} else {
+				JOptionPane.showMessageDialog(null, "A árvore não é conservativa.");
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * @author neto
+	 * Classe interna responsável por verifica se um no eh alcansavel
+	 */
+	private class ReachableStateHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TabPanel tab = tabs.get(networksPanel.getSelectedIndex());
+			Tree tree = tab.getTree();
+			
+			String config = JOptionPane.showInputDialog("Digite a configuração do estado a ser verificado (ex.: 1 0 0 2 4) :");
+			String configs[] = config.split(" ");
+			
+			ArrayList<Integer> configuration = new ArrayList<>();
+			
+			for (String c : configs) {
+				configuration.add(Integer.parseInt(c));
+			}
+			
+			boolean reachable = tree.reachableNode(configuration);
+			System.out.println(reachable);
+			
+			addTab(tree, tab.getFileName().replace(".", "_") + "_reachable");
+			
 		}
 		
 	}

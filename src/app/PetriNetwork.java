@@ -177,6 +177,17 @@ public class PetriNetwork {
 		return str;
 	}
 
+	public String configurationToString() {
+		String str = "[ ";
+
+		for (Integer integer : configuration) {
+			str += integer + " ";
+		}
+		str += "]";
+
+		return str;
+	}
+
 	public PetriNetwork clone() {
 		return new PetriNetwork(this);
 	}

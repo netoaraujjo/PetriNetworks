@@ -144,7 +144,7 @@ public class Tree {
 				for (int i = 0; i < nodeAux.getPetriNetwork().getConfiguration().size(); i++) {
 					if (nodeAux.getPetriNetwork().getConfiguration().get(i).equals(Place.W)
 							|| nodeAux.getPetriNetwork().getConfiguration().get(i).equals(configurationX.get(i)))
-						i++;
+						flag++;
 				}
 				if (flag == nodeAux.getPetriNetwork().getConfiguration().size()) {
 					nodeAux.setReachable(true);

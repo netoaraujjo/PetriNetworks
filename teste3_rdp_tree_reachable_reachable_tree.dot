@@ -1,0 +1,41 @@
+digraph teste3_rdp_tree_reachable_reachable_tree {
+	graph [pad="0.5,0.5"]
+	node [fillcolor=aquamarine4 shape=circle style=filled]
+		1 [label="[ 2 1 0 ]"]
+		2 [label="[ 1 2 1 ]" fillcolor=green]
+		4 [label="[ 0 3 2 ]"]
+		8 [label="[ 1 2 1 ]" fillcolor=cornflowerblue]
+		9 [label="[ 1 2 999 ]" fillcolor=yellow]
+		13 [label="[ 0 3 999 ]" fillcolor=yellow]
+		18 [label="[ 1 2 999 ]" fillcolor=cornflowerblue]
+		19 [label="[ 1 2 999 ]" fillcolor=cornflowerblue]
+		14 [label="[ 2 1 999 ]" fillcolor=cornflowerblue]
+		15 [label="[ 2 1 999 ]" fillcolor=cornflowerblue]
+		5 [label="[ 2 1 0 ]" fillcolor=cornflowerblue]
+		6 [label="[ 2 1 999 ]" fillcolor=yellow]
+		10 [label="[ 1 2 999 ]" fillcolor=cornflowerblue]
+		11 [label="[ 3 0 998 ]" fillcolor=yellow]
+		16 [label="[ 2 1 999 ]" fillcolor=cornflowerblue]
+		12 [label="[ 3 0 999 ]" fillcolor=yellow]
+		17 [label="[ 2 1 999 ]" fillcolor=cornflowerblue]
+		3 [label="[ 3 0 0 ]"]
+		7 [label="[ 2 1 999 ]" fillcolor=cornflowerblue]
+			4 -> 8
+			13 -> 18
+			13 -> 19
+			9 -> 13
+			9 -> 14
+			9 -> 15
+			4 -> 9
+			2 -> 4
+			2 -> 5
+			6 -> 10
+			11 -> 16
+			6 -> 11
+			12 -> 17
+			6 -> 12
+			2 -> 6
+			1 -> 2
+			3 -> 7
+			1 -> 3
+}
