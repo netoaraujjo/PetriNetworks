@@ -48,13 +48,15 @@ public class TabPanel extends JPanel {
 		drawRdP();
 	}
 
-	public TabPanel(Tree tree, String fileName) {
+	public TabPanel(Tree tree, String fileName, String color) {
 		this.tree = tree;
 		this.fileName = fileName;
 
 		String name = fileName.replace(".", "_");
 
 		name += "_tree";
+		
+		String projectPath = System.getProperty("user.dir");
 
 		try {
 			outputTree = new Formatter(name + ".dot");
@@ -69,7 +71,7 @@ public class TabPanel extends JPanel {
 		outputTree.format("\t%s\n", "graph [pad=\"0.5,0.5\"]");
 		outputTree.format("\t%s\n", "node [fillcolor=aquamarine4 shape=circle style=filled]");
 
-		this.drawTree(this.tree.getNode());
+		this.drawTree(this.tree.getNode(), color);
 
 		outputTree.format("%s", edges);
 		outputTree.format("%s", "}");
@@ -79,17 +81,17 @@ public class TabPanel extends JPanel {
 		}
 
 		try {
-			Process pTree = Runtime.getRuntime().exec("dot -Tpng " + name + ".dot -o src/images/" + name + ".png");
-
-			while (pTree.isAlive()) {
-			}
+			Process pTree = Runtime.getRuntime().exec("dot -Tpng " + name + ".dot -o " + projectPath + "/src/images/" + name + ".png");
+			
+			while (pTree.isAlive()) {}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			String dir = "images/" + name + ".png";
-
-			image = new ImageIcon(getClass().getClassLoader().getResource(dir));
+			
+			String dir = projectPath + "/src/images/" + name + ".png";
+			
+			image = new ImageIcon(dir);
 
 			if (image == null) {
 				System.out.println("erro");
@@ -112,20 +114,19 @@ public class TabPanel extends JPanel {
 		}
 	}
 
-	private void drawTree(Node nodeAux) {
-
+	private void drawTree(Node nodeAux, String color) {
 		if (nodeAux != null) {
 
 			String label = nodeAux.getPetriNetwork().configurationToString();
 
-			if (nodeAux.isReachable()) {
+			if (nodeAux.isReachable() && color.equalsIgnoreCase("green")) {
 				nodeAux.setReachable(false);
 				outputTree.format("\t\t%d [label=\"%s\" fillcolor=green]\n", nodeAux.getNodeId(), label);
-			} else if (nodeAux.isBlockade()) {
+			} else if (nodeAux.isBlockade() && color.equalsIgnoreCase("red")) {
 				outputTree.format("\t\t%d [label=\"%s\" fillcolor=red]\n", nodeAux.getNodeId(), label);
-			} else if (nodeAux.isDuplicate()) {
+			} else if (nodeAux.isDuplicate() && color.equalsIgnoreCase("cornflowerblue")) {
 				outputTree.format("\t\t%d [label=\"%s\" fillcolor=cornflowerblue]\n", nodeAux.getNodeId(), label);
-			} else if (!nodeAux.isLimited()) {
+			} else if (!nodeAux.isLimited() && color.equalsIgnoreCase("yellow")) {
 				outputTree.format("\t\t%d [label=\"%s\" fillcolor=yellow]\n", nodeAux.getNodeId(), label);
 			} else {
 				outputTree.format("\t\t%d [label=\"%s\"]\n", nodeAux.getNodeId(), label);
@@ -134,7 +135,7 @@ public class TabPanel extends JPanel {
 			if (nodeAux.getChildrens() != null) {
 				for (Node child : nodeAux.getChildrens()) {
 					// Recursão para desenhar sub-árvore de filhos
-					drawTree(child);
+					drawTree(child, color);
 					// Aresta entre árvore e sub-árvore
 
 					edges += String.format("\t\t\t%d -> %d\n", nodeAux.getNodeId(), child.getNodeId());
@@ -147,6 +148,8 @@ public class TabPanel extends JPanel {
 	private void drawRdP() {
 
 		String name = fileName.replace(".", "_");
+		
+		String projectPath = System.getProperty("user.dir");
 
 		Formatter output;
 		try {
@@ -184,7 +187,7 @@ public class TabPanel extends JPanel {
 		}
 
 		try {
-			Process p = Runtime.getRuntime().exec("dot -Tpng " + fileName + ".dot -o src/images/" + name + ".png");
+			Process p = Runtime.getRuntime().exec("dot -Tpng " + fileName + ".dot -o " + projectPath + "/src/images/" + name + ".png");
 
 			while (p.isAlive()) {
 			}
@@ -192,9 +195,10 @@ public class TabPanel extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			String dir = "images/" + name + ".png";
-
-			image = new ImageIcon(getClass().getClassLoader().getResource(dir));
+			
+			String dir = projectPath + "/src/images/" + name + ".png";
+			
+			image = new ImageIcon(dir);
 
 			if (image == null) {
 				System.out.println("erro");

@@ -181,7 +181,10 @@ public class PetriNetwork {
 		String str = "[ ";
 
 		for (Integer integer : configuration) {
-			str += integer + " ";
+			if (integer == Place.W)
+				str += "w ";
+			else
+				str += integer + " ";
 		}
 		str += "]";
 
@@ -206,7 +209,8 @@ public class PetriNetwork {
 					Place p = (Place) edge.getDestiny();
 					// Só incrementa se a quantidade de fichas for limitada
 					// Incrementa fichas de acordo com o peso da aresta
-					p.setQntCoin(p.getQntCoin() + edge.getWeight());
+					if (p.getQntCoin() != Place.W)
+						p.setQntCoin(p.getQntCoin() + edge.getWeight());
 
 					// Se a transição for destino
 				} else if (edge.getDestiny().getLabel().equals(transition.getLabel())) {
@@ -214,7 +218,8 @@ public class PetriNetwork {
 					Place p = (Place) edge.getOrigin();
 					// Só decrementa se a quantidade de fichas for limitada
 					// Decrementa fichas de acordo com o peso da aresta
-					p.setQntCoin(p.getQntCoin() - edge.getWeight());
+					if (p.getQntCoin() != Place.W)
+						p.setQntCoin(p.getQntCoin() - edge.getWeight());
 
 				}
 			}

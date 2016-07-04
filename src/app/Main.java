@@ -74,9 +74,9 @@ public class Main {
 		Node node = new Node(petriNetwork, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
 		Tree tree = new Tree(node);
 		tree.generatedTree();
-		System.out.println("\n[Árvore]:\n" + tree);
+		System.out.println("\n[ï¿½rvore]:\n" + tree);
 		
-		System.out.println("\nÁrvore conservativa: " + tree.conservatedTree());
+		System.out.println("\nï¿½rvore conservativa: " + tree.conservatedTree());
 		
 		ArrayList<Integer> nodeX = new ArrayList<Integer>();
 		nodeX.add(1);
@@ -84,7 +84,7 @@ public class Main {
 		nodeX.add(17);
 		nodeX.add(0);
 				
-		System.out.println("\nNó alcançável: " + tree.reachableNode(nodeX));
+		System.out.println("\nNï¿½ alcanï¿½ï¿½vel: " + tree.reachableNode(nodeX));
 
 	}
 

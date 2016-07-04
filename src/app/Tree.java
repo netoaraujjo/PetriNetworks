@@ -1,7 +1,6 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Tree {
 
@@ -138,35 +137,38 @@ public class Tree {
 		Node nodeAux = node;
 		ArrayList<Node> listNodes = new ArrayList<Node>();
 
-		while (true) {
-			if (!nodeAux.isTerminal() && !nodeAux.isDuplicate()) {
-				int flag = 0;
-				for (int i = 0; i < nodeAux.getPetriNetwork().getConfiguration().size(); i++) {
-					if (nodeAux.getPetriNetwork().getConfiguration().get(i).equals(Place.W)
-							|| nodeAux.getPetriNetwork().getConfiguration().get(i).equals(configurationX.get(i)))
-						flag++;
+		if (configurationX.size() == nodeAux.getPetriNetwork().getConfiguration().size()) {
+
+			while (true) {
+				if (!nodeAux.getChildrens().isEmpty()) {
+					int flag = 0;
+					for (int i = 0; i < nodeAux.getPetriNetwork().getConfiguration().size(); i++) {
+						if (nodeAux.getPetriNetwork().getConfiguration().get(i).equals(Place.W)
+								|| nodeAux.getPetriNetwork().getConfiguration().get(i).equals(configurationX.get(i)))
+							flag++;
+					}
+					if (flag == nodeAux.getPetriNetwork().getConfiguration().size()) {
+						nodeAux.setReachable(true);
+						return true;
+					}
+					for (Node child : nodeAux.getChildrens()) {
+						listNodes.add(child);
+					}
+
+					if (listNodes.isEmpty())
+						break;
+
+					nodeAux = listNodes.get(0);
+					listNodes.remove(0);
+
+				} else {
+
+					if (listNodes.isEmpty())
+						break;
+
+					nodeAux = listNodes.get(0);
+					listNodes.remove(0);
 				}
-				if (flag == nodeAux.getPetriNetwork().getConfiguration().size()) {
-					nodeAux.setReachable(true);
-					return true;
-				}
-				for (Node child : nodeAux.getChildrens()) {
-					listNodes.add(child);
-				}
-
-				if (listNodes.isEmpty())
-					break;
-
-				nodeAux = listNodes.get(0);
-				listNodes.remove(0);
-
-			} else {
-
-				if (listNodes.isEmpty())
-					break;
-
-				nodeAux = listNodes.get(0);
-				listNodes.remove(0);
 			}
 		}
 
