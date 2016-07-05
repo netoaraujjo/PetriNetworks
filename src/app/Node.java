@@ -15,10 +15,12 @@ public class Node {
 	private ArrayList<Node> childrens = new ArrayList<Node>();
 	private ArrayList<ArrayList<Integer>> generatedNodes;
 	private ArrayList<ArrayList<Integer>> pathGenerated;
-	
+
 	private static int id = 0;
-	
+
 	private int nodeId;
+
+	private String parentLabel = "";
 
 	public Node(PetriNetwork petriNetwork, ArrayList<ArrayList<Integer>> generatedNodes,
 			ArrayList<ArrayList<Integer>> pathGenerated) {
@@ -27,12 +29,12 @@ public class Node {
 		this.limited = true;
 		this.generatedNodes = generatedNodes;
 		this.pathGenerated = pathGenerated;
-		
+
 		id += 1;
-		
+
 		nodeId = id;
 	}
-	
+
 	public int getNodeId() {
 		return nodeId;
 	}
@@ -108,6 +110,16 @@ public class Node {
 	public void setPathGenerated(ArrayList<ArrayList<Integer>> pathGenerated) {
 		this.pathGenerated = pathGenerated;
 	}
+	
+	
+
+	public String getParentLabel() {
+		return parentLabel;
+	}
+
+	public void setParentLabel(String parentLabel) {
+		this.parentLabel = parentLabel;
+	}
 
 	public void generateChildrens() {
 
@@ -159,7 +171,7 @@ public class Node {
 						newPN.transitionsRefresh();
 					}
 				}
-
+				
 				pathGenerated.add(newPN.getConfiguration());
 
 				this.terminal = false;
@@ -175,6 +187,7 @@ public class Node {
 
 				// Geração de novo nó
 				Node newNode = new Node(newPN, this.generatedNodes, pathGenerated);
+				newNode.setParentLabel(transition.getLabel());
 				newNode.setDuplicate(duplicate);
 				newNode.setLimited(limited);
 				this.childrens.add(newNode);

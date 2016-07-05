@@ -140,35 +140,27 @@ public class Tree {
 		if (configurationX.size() == nodeAux.getPetriNetwork().getConfiguration().size()) {
 
 			while (true) {
-				if (!nodeAux.getChildrens().isEmpty()) {
-					int flag = 0;
-					for (int i = 0; i < nodeAux.getPetriNetwork().getConfiguration().size(); i++) {
-						if (nodeAux.getPetriNetwork().getConfiguration().get(i).equals(Place.W)
-								|| nodeAux.getPetriNetwork().getConfiguration().get(i).equals(configurationX.get(i)))
-							flag++;
-					}
-					if (flag == nodeAux.getPetriNetwork().getConfiguration().size()) {
-						nodeAux.setReachable(true);
-						return true;
-					}
-					for (Node child : nodeAux.getChildrens()) {
-						listNodes.add(child);
-					}
 
-					if (listNodes.isEmpty())
-						break;
-
-					nodeAux = listNodes.get(0);
-					listNodes.remove(0);
-
-				} else {
-
-					if (listNodes.isEmpty())
-						break;
-
-					nodeAux = listNodes.get(0);
-					listNodes.remove(0);
+				int flag = 0;
+				for (int i = 0; i < nodeAux.getPetriNetwork().getConfiguration().size(); i++) {
+					if (nodeAux.getPetriNetwork().getConfiguration().get(i).equals(Place.W)
+							|| nodeAux.getPetriNetwork().getConfiguration().get(i).equals(configurationX.get(i)))
+						flag++;
 				}
+				if (flag == nodeAux.getPetriNetwork().getConfiguration().size()) {
+					nodeAux.setReachable(true);
+					return true;
+				}
+				for (Node child : nodeAux.getChildrens()) {
+					listNodes.add(child);
+				}
+
+				if (listNodes.isEmpty())
+					break;
+
+				nodeAux = listNodes.get(0);
+				listNodes.remove(0);
+
 			}
 		}
 

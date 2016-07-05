@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class TabPanel extends JPanel {
 	private Formatter outputTree;
 	private String edges;
 
+	private String separator = File.separator;
+
 	public TabPanel(PetriNetwork petriNetwork, String fileName) {
 		this.setLayout(new BorderLayout());
 		this.setBackground(new Color(255, 255, 255));
@@ -55,7 +58,7 @@ public class TabPanel extends JPanel {
 		String name = fileName.replace(".", "_");
 
 		name += "_tree";
-		
+
 		String projectPath = System.getProperty("user.dir");
 
 		try {
@@ -81,16 +84,18 @@ public class TabPanel extends JPanel {
 		}
 
 		try {
-			Process pTree = Runtime.getRuntime().exec("dot -Tpng " + name + ".dot -o " + projectPath + "/src/images/" + name + ".png");
-			
-			while (pTree.isAlive()) {}
+			Process pTree = Runtime.getRuntime().exec("dot -Tpng " + name + ".dot -o " + projectPath + separator + "src"
+					+ separator + "images" + separator + name + ".png");
+
+			while (pTree.isAlive()) {
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			
-			String dir = projectPath + "/src/images/" + name + ".png";
-			
+
+			String dir = projectPath + separator + "src" + separator + "images" + separator + name + ".png";
+
 			image = new ImageIcon(dir);
 
 			if (image == null) {
@@ -101,16 +106,16 @@ public class TabPanel extends JPanel {
 			int imagewidth = image.getIconWidth();
 			int imageHeight = image.getIconHeight();
 
-			imageLabel.setSize(imagewidth, imageHeight);
-
 			imageLabel.setIcon(image);
+
+			imageLabel.setSize(imagewidth, imageHeight);
 
 			drawPanel = new JScrollPane(imageLabel);
 			drawPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 			drawPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 			this.add(drawPanel);
-			
+
 		}
 	}
 
@@ -136,9 +141,9 @@ public class TabPanel extends JPanel {
 				for (Node child : nodeAux.getChildrens()) {
 					// Recursão para desenhar sub-árvore de filhos
 					drawTree(child, color);
+					
 					// Aresta entre árvore e sub-árvore
-
-					edges += String.format("\t\t\t%d -> %d\n", nodeAux.getNodeId(), child.getNodeId());
+					edges += String.format("\t\t\t%d -> %d [label=\"%s\"]\n", nodeAux.getNodeId(), child.getNodeId(), child.getParentLabel());
 				}
 			}
 		}
@@ -148,7 +153,7 @@ public class TabPanel extends JPanel {
 	private void drawRdP() {
 
 		String name = fileName.replace(".", "_");
-		
+
 		String projectPath = System.getProperty("user.dir");
 
 		Formatter output;
@@ -187,17 +192,17 @@ public class TabPanel extends JPanel {
 		}
 
 		try {
-			Process p = Runtime.getRuntime().exec("dot -Tpng " + fileName + ".dot -o " + projectPath + "/src/images/" + name + ".png");
+			Process p = Runtime.getRuntime().exec("dot -Tpng " + fileName + ".dot -o " + projectPath + separator + "src"
+					+ separator + "images" + separator + name + ".png");
 
-			while (p.isAlive()) {
-			}
+			while (p.isAlive()) {}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			
-			String dir = projectPath + "/src/images/" + name + ".png";
-			
+
+			String dir = projectPath + separator + "src" + separator + "images" + separator + name + ".png";
+
 			image = new ImageIcon(dir);
 
 			if (image == null) {
@@ -205,10 +210,10 @@ public class TabPanel extends JPanel {
 			}
 
 			imageLabel = new JLabel();
-			int imagewidth = image.getIconWidth();
+			int imageWidth = image.getIconWidth();
 			int imageHeight = image.getIconHeight();
 
-			imageLabel.setSize(imagewidth, imageHeight);
+			imageLabel.setSize(imageWidth, imageHeight);
 
 			imageLabel.setIcon(image);
 

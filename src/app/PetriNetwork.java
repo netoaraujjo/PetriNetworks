@@ -128,6 +128,8 @@ public class PetriNetwork {
 					} else if (p.getQntCoin() >= edge.getWeight()) {
 						active = true;
 					}
+				} else if (transition.getLabel().equals(edge.getOrigin().getLabel())) {
+					active = true;
 				}
 
 			}

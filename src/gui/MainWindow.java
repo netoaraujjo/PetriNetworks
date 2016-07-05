@@ -46,10 +46,14 @@ public class MainWindow extends JFrame {
 	private JMenu helpMenu;
 
 	// Opcoes do menu file
+	@SuppressWarnings("unused")
 	private JMenuItem newMenuItem;
 	private JMenuItem openMenuItem;
+	@SuppressWarnings("unused")
 	private JMenuItem saveMenuItem;
+	@SuppressWarnings("unused")
 	private JMenuItem exitMenuItem;
+	@SuppressWarnings("unused")
 	private JMenuItem exportMenuItem;
 
 	// Opcoes do menu help
@@ -80,7 +84,7 @@ public class MainWindow extends JFrame {
 	private JButton addEdgeButton;
 
 	// Painel centra e painel de abas
-	private JPanel centerPanel;
+	// private JPanel centerPanel;
 	private JTabbedPane networksPanel;
 	private ArrayList<TabPanel> tabs;
 
@@ -272,9 +276,6 @@ public class MainWindow extends JFrame {
 
 				fileChooser.getSelectedFile(); // retorna um File
 
-				// System.out.println("Arquivo selecionado: " +
-				// fileChooser.getSelectedFile().getAbsolutePath());
-
 				try {
 					Scanner input = new Scanner(fileChooser.getSelectedFile());
 
@@ -284,12 +285,7 @@ public class MainWindow extends JFrame {
 					while (input.hasNext()) {
 						edgesTmp.add(input.nextLine());
 					}
-
-					/*
-					 * System.out.println(placesTmp);
-					 * System.out.println(transitionsTmp);
-					 * System.out.println(edgesTmp);
-					 */
+					input.close();
 
 					String placesStr[] = placesTmp.trim().split(";");
 					String transitionsStr[] = transitionsTmp.trim().split(";");
@@ -310,23 +306,11 @@ public class MainWindow extends JFrame {
 					Map<String, ArrayList<Edge>> edges = new HashMap<>();
 
 					for (String transitionStr : transitionsStr) {
-						// System.out.println("Add " + transitionStr + " a
-						// transicoes");
 						transitions.add(new Transition(transitionStr, false));
 						edges.put(transitionStr, new ArrayList<Edge>());
 					}
 
-					/*
-					 * for (Transition transition : transitions) {
-					 * System.out.println(transition.getLabel()); } for (Place
-					 * place : places) { System.out.println(place.getLabel()); }
-					 * System.out.println("Chaves do hash");
-					 * System.out.println(edges.keySet());
-					 */
-
-					// System.out.println("Dentro da construcao do hash");
 					for (int i = 0; i < edgesStr.length; i++) {
-						// System.out.println(edgesStr[i][0]);
 
 						State origin = null;
 						State destiny = null;
@@ -334,8 +318,6 @@ public class MainWindow extends JFrame {
 						// Verifica se o hashmap tem o label da origem como
 						// chave
 						if (edges.containsKey(edgesStr[i][0])) {
-							// System.out.println("Origem eh chave do
-							// hash/transicao");
 							// origem e uma transicao
 							for (Transition transition : transitions) {
 								if (transition.getLabel().equals(edgesStr[i][0])) {
@@ -352,14 +334,8 @@ public class MainWindow extends JFrame {
 							}
 						} else {
 							// origem e um lugar
-							// System.out.println("Origem eh lugar");
 							for (Place place : places) {
-								// System.out.println("comparando " +
-								// edgesStr[i][0] + " com: " +
-								// place.getLabel());
 								if (place.getLabel().equals(edgesStr[i][0])) {
-									// System.out.println(edgesStr[i][0] + " = "
-									// + place.getLabel());
 									origin = place;
 									break;
 								}
@@ -409,12 +385,17 @@ public class MainWindow extends JFrame {
 				TabPanel tab = tabs.get(networksPanel.getSelectedIndex());
 				PetriNetwork petriNet = tab.getPetriNetwork();
 
-				Node node = new Node(petriNet, new ArrayList<ArrayList<Integer>>(),
-						new ArrayList<ArrayList<Integer>>());
-				Tree tree = new Tree(node);
-				tree.generatedTree();
+				if (petriNet != null) {
+					Node node = new Node(petriNet, new ArrayList<ArrayList<Integer>>(),
+							new ArrayList<ArrayList<Integer>>());
+					Tree tree = new Tree(node);
+					tree.generatedTree();
 
-				addTab(tree, tab.getFileName().replace(".", "_") + "_tree", "");
+					addTab(tree, tab.getFileName().replace(".", "_") + "_tree", "");
+				} else {
+					JOptionPane.showMessageDialog(MainWindow.this, "Aba atual nao corresponde a uma Rede de Petri!!",
+							"Erro", JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
 				JOptionPane.showMessageDialog(MainWindow.this, "Nenhuma aba existente!!", "Erro",
 						JOptionPane.ERROR_MESSAGE);
@@ -517,7 +498,10 @@ public class MainWindow extends JFrame {
 					ArrayList<Integer> configuration = new ArrayList<>();
 
 					for (String c : configs) {
-						configuration.add(Integer.parseInt(c));
+						if (c.equals("w") || c.equals("W"))
+							configuration.add(Place.W);
+						else
+							configuration.add(Integer.parseInt(c));
 					}
 
 					boolean reachable = tree.reachableNode(configuration);
